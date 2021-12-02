@@ -42,10 +42,20 @@ public class MyDWG implements api.DirectedWeightedGraph {
         this.edgeIter = 0;
         this.edgeNodeIter = 0;
     }
-
     /**
-     * A constructor that receives a json file and created a graph from it.
-     *
+     * A simple copy constructor
+     * @param other
+     */
+    public MyDWG(MyDWG other){
+        this.nodes = other.nodes;
+        this.numOfEdge = other.numOfEdge;
+        this.mc = other.mc;
+        this.nodeIter = other.nodeIter;
+        this.edgeIter = other.edgeIter;
+        this.edgeNodeIter = other.edgeNodeIter;
+    }
+    /**
+     * A constructor that receives a json file and created a graph from it
      * @param json
      */
     public MyDWG(String json) {
@@ -212,7 +222,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
      * @return Iterator<EdgeData>
      */
     @Override
-    public Iterator<EdgeData> edgeIter(int node_id) {
+    public Iterator<EdgeData> edgeIter(int node_id)throws RuntimeException {
         this.edgeNodeIter = mc;
         HashMap<Integer, EdgeData> newHashMap = new HashMap<Integer, EdgeData>();
         for (Integer key : this.nodes.get(node_id).getConnectedTo().keySet()) {
@@ -221,7 +231,6 @@ public class MyDWG implements api.DirectedWeightedGraph {
         Iterator<EdgeData> iterator = newHashMap.values().iterator();//need to test this
         return iterator;
     }
-
     /**
      * Deletes the node (with the given ID) from the graph -
      * and removes all edges which starts or ends at this node.

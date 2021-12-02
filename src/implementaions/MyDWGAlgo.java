@@ -5,14 +5,18 @@ import api.NodeData;
 import java.util.List;
 
 public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
+    private MyDWG graph;
+    public MyDWGAlgo(String file){
+        this.graph = null;
+        load(file);
+    }
     /**
      * Inits the graph on which this set of algorithms operates on.
-     *
      * @param g
      */
     @Override
     public void init(DirectedWeightedGraph g) {
-
+        this.graph= (MyDWG) g;
     }
 
     /**
@@ -22,23 +26,22 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public DirectedWeightedGraph getGraph() {
-        return null;
+        return this.graph;
     }
 
     /**
      * Computes a deep copy of this weighted graph.
      *
-     * @return
+     * @return DirectedWeightedGraph copy
      */
     @Override
-    public DirectedWeightedGraph copy() {
-        return null;
+    public DirectedWeightedGraph copy()  {
+        MyDWG copy_graph = new MyDWG(this.graph);
+        return copy_graph;
     }
-
     /**
      * Returns true if and only if (iff) there is a valid path from each node to each
      * other node. NOTE: assume directional graph (all n*(n-1) ordered pairs).
-     *
      * @return
      */
     @Override
@@ -49,7 +52,6 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     /**
      * Computes the length of the shortest path between src to dest
      * Note: if no such path --> returns -1
-     *
      * @param src  - start node
      * @param dest - end (target) node
      * @return
@@ -70,7 +72,8 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      * @return
      */
     @Override
-    public List<NodeData> shortestPath(int src, int dest) {
+    public List<NodeData> shortestPath(int src, int dest){
+
         return null;
     }
 
@@ -90,7 +93,6 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      * the sum of the weights of all the consecutive (pairs) of nodes (directed) is the "cost" of the solution -
      * the lower the better.
      * See: https://en.wikipedia.org/wiki/Travelling_salesman_problem
-     *
      * @param cities
      */
     @Override
@@ -121,6 +123,13 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public boolean load(String file) {
-        return false;
+        try{
+            this.graph = new MyDWG(file);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }

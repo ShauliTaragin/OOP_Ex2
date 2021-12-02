@@ -3,7 +3,7 @@ package implementaions;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyDWGTest {
-    MyDWG dwg = new MyDWG("data\\G1.json");
+    MyDWG dwg = new MyDWG("data/G1.json");
     //
     @org.junit.jupiter.api.Test
     void getNode() {
