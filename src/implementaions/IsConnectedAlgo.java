@@ -115,7 +115,7 @@ public class IsConnectedAlgo {
         int pointer=dest;
         for(int i=this.dist.size()-1;i>=0;i--) {
             if(i!=0) {
-                if(this.dist.get(i).get(pointer)==this.dist.get(i-1).get(pointer)){
+                if(this.dist.get(i).get(pointer).equals(this.dist.get(i-1).get(pointer))){
                     if(!ans.contains(pointer)){
                         ans.add(0,pointer);
                     }
@@ -134,7 +134,9 @@ public class IsConnectedAlgo {
                 }
             }
         }
-        ans.add(0,src);
+        if(!ans.contains(src)) {
+            ans.add(0, src);
+        }
         return ans;
     }
 }

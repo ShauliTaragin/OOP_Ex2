@@ -42,6 +42,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
         this.edgeIter = 0;
         this.edgeNodeIter = 0;
     }
+
     /**
      * A simple copy constructor
      * @param other
@@ -222,7 +223,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
      * @return Iterator<EdgeData>
      */
     @Override
-    public Iterator<EdgeData> edgeIter(int node_id)throws RuntimeException {
+    public Iterator<EdgeData> edgeIter(int node_id) {
         this.edgeNodeIter = mc;
         HashMap<Integer, EdgeData> newHashMap = new HashMap<Integer, EdgeData>();
         for (Integer key : this.nodes.get(node_id).getConnectedTo().keySet()) {
@@ -231,6 +232,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
         Iterator<EdgeData> iterator = newHashMap.values().iterator();//need to test this
         return iterator;
     }
+
     /**
      * Deletes the node (with the given ID) from the graph -
      * and removes all edges which starts or ends at this node.
