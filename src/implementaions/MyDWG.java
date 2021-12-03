@@ -118,7 +118,12 @@ public class MyDWG implements api.DirectedWeightedGraph {
         }
 
     }
-
+    public MyNode getMyNode(int key){
+        if(this.nodes.containsKey(key)) {
+            return this.nodes.get(key);
+        }
+        return null;
+    }
     /**
      * returns the node_data by the node_id.
      *
@@ -127,7 +132,10 @@ public class MyDWG implements api.DirectedWeightedGraph {
      */
     @Override
     public NodeData getNode(int key) {
-        return this.nodes.get(key).getNode();
+        if(this.nodes.containsKey(key)) {
+            return this.nodes.get(key).getNode();
+        }
+        return null;
     }
 
     /**
@@ -140,7 +148,10 @@ public class MyDWG implements api.DirectedWeightedGraph {
      */
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return this.nodes.get(src).getConnectedTo().get(dest);
+        if(this.nodes.get(src).getConnectedTo().containsKey(dest)) {
+            return this.nodes.get(src).getConnectedTo().get(dest);
+        }
+        return null;
     }
 
     /**
@@ -253,6 +264,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
         }
         NodeData node = this.nodes.get(key).getNode();
         this.nodes.remove(key);
+        this.mc++;
         return node;
     }
 

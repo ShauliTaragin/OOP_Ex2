@@ -19,6 +19,13 @@ public class NodeD implements api.NodeData{
         this.info=info;
         this.tag=tag;
     }
+    public NodeD(int key , GeoLocation location) {
+        this.key=key;
+        this.location=location;
+        this.weight=0.0;
+        this.info="";
+        this.tag=0;
+    }
     /**
      * Returns the key (id) associated with this node.
      *
