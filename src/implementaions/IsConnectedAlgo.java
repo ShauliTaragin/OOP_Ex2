@@ -56,14 +56,13 @@ public class IsConnectedAlgo {
             node1.getNode().setWeight(0.0);
             this.pq.add(node1);
         }
-        if(func==0){
-            return checkIfConnect();
-        }
-        else if(func==1){
-            return shortestDistTo(dest);
-        }
-        else{
-            return nodeInShortestPath(src, dest);
+        switch (func){
+            case 0:
+                return checkIfConnect();
+            case 1:
+                return shortestDistTo(dest);
+            default:
+                return nodeInShortestPath(src, dest);
         }
     }
         // Method 2
