@@ -118,6 +118,10 @@ public class MyDWG implements api.DirectedWeightedGraph {
         }
 
     }
+    public HashMap<Integer, MyNode> getNodes() {
+        return this.nodes;
+    }
+
     public MyNode getMyNode(int key){
         if(this.nodes.containsKey(key)) {
             return this.nodes.get(key);

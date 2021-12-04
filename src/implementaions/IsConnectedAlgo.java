@@ -7,36 +7,47 @@ public class IsConnectedAlgo {
     // Member variables of this class
     private HashMap<Integer,HashMap<Integer, Double> >dist; //holds nodes in graph by key and their current weight for algorithm purpose
     private ArrayList<Integer> settled;
-    private PriorityQueue<MyNode> pq;
+    private TreeSet<MyNode> ts;
     private HashMap<Integer, MyNode> nodes;
     private final Double INFINITY = Double.MAX_VALUE;
+    private HashMap<Integer, Double> temp;
     // Constructor of this class
-    public IsConnectedAlgo(int i, HashMap<Integer, MyNode> nodes) {
+    public IsConnectedAlgo( HashMap<Integer, MyNode> nodes) {
         // This keyword refers to current object itself
+        this.temp=new HashMap<>();
         this.nodes = nodes;
         this.dist = new HashMap<>();//this needs to be connected to
         this.settled = new ArrayList<>();
-        this.pq = new PriorityQueue<>(this.nodes.size(), new MyNode());
+        this.ts = new TreeSet(new MyNode());
+
     }
-    // Method 1
     // Dijkstra's Algorithm
     public ArrayList dijkstra(int src,MyDWG graph,int func,int dest) {
         Iterator<NodeData> nodeIterator= graph.nodeIter();
-        HashMap<Integer, Double> temp=new HashMap<>();
+
         while(nodeIterator.hasNext()) {
             int node_key = nodeIterator.next().getKey();
-            temp.put(node_key,INFINITY);
-            this.nodes.put(node_key, (MyNode) graph.getNode(node_key));
+            this.temp.put(node_key,INFINITY);
+            MyNode node1=new MyNode(this.nodes.get(node_key).getNode());
+            node1.getNode().setWeight(INFINITY);
+            this.ts.add(node1);
+            //this.pq.add(new MyNode(this.nodes.get(node_key).getNode()));
+            //this.nodes.put(node_key, (MyNode) graph.getNode(node_key));
         }
-            temp.replace(src,0.0);
-        this.dist.put(0,temp);
+        this.temp.replace(src,0.0);
+        this.dist.put(0,this.temp);
         // Add source node to the priority queue
-        MyNode node=new MyNode(graph.getNode(src));
+        MyNode node=new MyNode(this.nodes.get(src).getNode());
         node.getNode().setWeight(0.0);
-        this.pq.add(node);
+        this.ts.add(node);
         // Distance to the source is 0
         while (this.settled.size() != graph.nodeSize()) {
-            int u = this.pq.remove().getNode().getKey();
+            if(this.ts.isEmpty()){
+                ArrayList<Integer> ans=new ArrayList<>();
+                ans.add(-1);
+                return ans;
+            }
+            int u = this.ts.pollFirst().getNode().getKey();
             if(func==1&&u==dest){
                 return shortestDistTo(dest);
             }
@@ -48,13 +59,14 @@ public class IsConnectedAlgo {
             if (this.settled.contains(u)) {
                 continue;
             }
+
             // We don't have to call e_Neighbors(u)
             // if u is already present in the settled set.
             this.settled.add(u);
             e_Neighbours(u,this.dist.get(this.dist.size()-1));
-            MyNode node1=new MyNode(graph.getNode(u));
-            node1.getNode().setWeight(0.0);
-            this.pq.add(node1);
+//            MyNode node1=new MyNode(graph.getNode(u));
+//            node1.getNode().setWeight(0.0);
+//            this.pq.add(node1);
         }
         switch (func){
             case 0:
@@ -68,33 +80,42 @@ public class IsConnectedAlgo {
         // Method 2
         // To process all the neighbours
         // of the passed node
-    private void e_Neighbours(int u,HashMap<Integer,Double> temp) {
+    private void e_Neighbours(int u,HashMap<Integer,Double> temp1) {
         double edgeDistance = -1;
         double newDistance = -1;
-        HashMap<Integer,Double> ans=temp;
-        ans.remove(u);
+        HashMap<Integer,Double> ans= (HashMap<Integer, Double>) temp1.clone();
         // All the neighbors of v
         for(Integer i:this.nodes.get(u).getConnectedTo().keySet()){
             // If current node hasn't already been processed
             if (!this.settled.contains(i)) {
                 edgeDistance = this.nodes.get(u).getConnectedTo().get(i).getWeight();
-                newDistance = temp.get(u) + edgeDistance;
+                newDistance = temp1.get(u) + edgeDistance;
                 // If new distance is cheaper in cost
-                if (newDistance < temp.get(i)) {
+                if (newDistance < temp1.get(i)) {
                     ans.replace(i, newDistance);
+                    MyNode node1=new MyNode(this.nodes.get(i).getNode());
+                    node1.getNode().setWeight(newDistance);
+                    this.ts.add(node1);
+                    this.temp.replace(i,newDistance);
                 }
             }
         }
+        int distSize=this.dist.size();
         this.dist.put(this.dist.size(),ans);
+        this.dist.get(distSize).remove(u);
     }
     private ArrayList<Integer> checkIfConnect(){
         ArrayList<Integer> ans=new ArrayList<>();
-        for(Double val:this.dist.get(this.dist.size()-1).values()){
+        for(Double val:this.temp.values()){
             if(val==INFINITY){
                 ans.add(-1);
                 return ans;
             }
         }
+        this.ts.clear();
+        this.dist.clear();
+        this.settled.clear();
+        this.temp.clear();
         ans.add(0);
         return ans;
     }

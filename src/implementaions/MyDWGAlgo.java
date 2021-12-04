@@ -2,6 +2,8 @@ package implementaions;
 
 import api.DirectedWeightedGraph;
 import api.NodeData;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
@@ -46,7 +48,14 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public boolean isConnected() {
-        return false;
+        IsConnectedAlgo shortest_path_algo = new IsConnectedAlgo(this.graph.getNodes());
+        for (Integer i :this.graph.getNodes().keySet()) {
+            ArrayList<Integer> holds_answers = new ArrayList<>();
+            holds_answers = shortest_path_algo.dijkstra(i,this.graph,0,0);//dest dosent matter
+            if (holds_answers.get(0)==-1)
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -58,7 +67,10 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        IsConnectedAlgo shortest_path_algo =new IsConnectedAlgo(this.graph.getNodes());
+        ArrayList<Double> ans=new ArrayList<Double>();
+        ans=shortest_path_algo.dijkstra(src,this.graph,1,dest);
+        return ans.get(0);
     }
 
     /**
@@ -73,8 +85,14 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest){
-
-        return null;
+        IsConnectedAlgo shortest_path_algo =new IsConnectedAlgo(this.graph.getNodes());
+        ArrayList<Integer> ans=new ArrayList<Integer>();
+        ans=shortest_path_algo.dijkstra(src,this.graph,1,dest);
+        ArrayList<NodeData> nodes =new ArrayList<>();
+        for(int i =0;i<ans.size();i++){
+            nodes.add(this.graph.getNode(ans.get(i)));
+        }
+        return nodes;
     }
 
     /**
