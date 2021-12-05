@@ -51,7 +51,7 @@ public class IsConnectedAlgo {
             if(func==1&&u==dest){
                 return shortestDistTo(dest);
             }
-            if(func==2&&u==dest){
+            if(func==3&&u==dest){
                 return nodeInShortestPath(src, dest);
             }
             // Adding the node whose distance is
@@ -73,6 +73,8 @@ public class IsConnectedAlgo {
                 return checkIfConnect();
             case 1:
                 return shortestDistTo(dest);
+            case 2:
+                return findGraphCenter();
             default:
                 return nodeInShortestPath(src, dest);
         }
@@ -128,6 +130,10 @@ public class IsConnectedAlgo {
             }
         }
         ans.add(INFINITY);
+        this.ts.clear();
+        this.dist.clear();
+        this.settled.clear();
+        this.temp.clear();
         return ans;
     }
     private ArrayList<Integer> nodeInShortestPath(int src,int dest){
@@ -158,6 +164,25 @@ public class IsConnectedAlgo {
         if(!ans.contains(src)) {
             ans.add(0, src);
         }
+        this.ts.clear();
+        this.dist.clear();
+        this.settled.clear();
+        this.temp.clear();
+        return ans;
+    }
+    private ArrayList findGraphCenter(){
+        ArrayList<Double> ans=new ArrayList<>();
+        double max = 0.;
+        for (Double value : this.temp.values()) {
+            if(value > max) {
+                max = value;
+            }
+        }
+        this.ts.clear();
+        this.dist.clear();
+        this.settled.clear();
+        this.temp.clear();
+        ans.add(max);
         return ans;
     }
 }

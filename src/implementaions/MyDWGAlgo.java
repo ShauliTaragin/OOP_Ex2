@@ -87,7 +87,7 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     public List<NodeData> shortestPath(int src, int dest){
         IsConnectedAlgo shortest_path_algo =new IsConnectedAlgo(this.graph.getNodes());
         ArrayList<Integer> ans=new ArrayList<Integer>();
-        ans=shortest_path_algo.dijkstra(src,this.graph,1,dest);
+        ans=shortest_path_algo.dijkstra(src,this.graph,3,dest);
         ArrayList<NodeData> nodes =new ArrayList<>();
         for(int i =0;i<ans.size();i++){
             nodes.add(this.graph.getNode(ans.get(i)));
@@ -103,7 +103,20 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public NodeData center() {
-        return null;
+        if(!isConnected())
+            return null;
+        IsConnectedAlgo center_algo =new IsConnectedAlgo(this.graph.getNodes());
+        double min = Double.MAX_VALUE;
+        int key_holder = -1;
+        ArrayList<Double> holds_ans = new ArrayList<>();
+        for (Integer key : this.graph.getNodes().keySet()) {
+            holds_ans= center_algo.dijkstra(key , this.graph , 2 , 0);
+            if(holds_ans.get(0) < min){
+                min = holds_ans.get(0);
+                key_holder = key;
+            }
+        }
+        return this.graph.getNode(key_holder);
     }
 
     /**
