@@ -79,9 +79,9 @@ public class IsConnectedAlgo {
                 return nodeInShortestPath(src, dest);
         }
     }
-        // Method 2
-        // To process all the neighbours
-        // of the passed node
+    // Method 2
+    // To process all the neighbours
+    // of the passed node
     private void e_Neighbours(int u,HashMap<Integer,Double> temp1) {
         double edgeDistance = -1;
         double newDistance = -1;
@@ -123,13 +123,7 @@ public class IsConnectedAlgo {
     }
     private ArrayList<Double> shortestDistTo(int dest){
         ArrayList<Double> ans=new ArrayList<>();
-        for(int i=this.dist.size()-1;i>=0;i--){
-            if(this.dist.get(i).containsKey(dest)){
-                ans.add(this.dist.get(i).get(dest));
-                return ans;
-            }
-        }
-        ans.add(INFINITY);
+        ans.add(temp.get(dest));
         this.ts.clear();
         this.dist.clear();
         this.settled.clear();
@@ -185,5 +179,54 @@ public class IsConnectedAlgo {
         ans.add(max);
         return ans;
     }
+    public List<NodeData> Shortest_path_in_given_nodes(List<NodeData> cities,MyDWG graph){
+        if(!findPath(cities,graph))
+        {
+            return null;
+        }
+        List<NodeData> bestPath=new ArrayList<>();
+        double minPath =Double.MAX_VALUE;
+        for(int j=0;j<cities.size();j++) {
+            ArrayList<NodeData> holdCities=new ArrayList<>(cities);
+            double current=0;
+            List<NodeData> path=new ArrayList<NodeData>();
+            int srcI = j;
+            int src = cities.get(srcI).getKey();
+            int destI = 0, currentdest = 0;
+            holdCities.remove(srcI);
+            path.add(graph.getNode(src));
+            while (!holdCities.isEmpty()) {
+                double minDist = Double.MAX_VALUE;
+                for (int i = 0; i < holdCities.size(); i++) {
+                    ArrayList<Double> ans = new ArrayList<Double>();
+                    ans = dijkstra(src, graph, 1, holdCities.get(i).getKey());
+                    double dist = ans.get(0);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        currentdest = holdCities.get(i).getKey();
+                        destI = i;
+                    }
+                }
+                current+=minDist;
+                ArrayList<Integer> tempPath = dijkstra(src, graph, 3, currentdest);
+                if (tempPath == null) return null;
+                boolean flag_first = true;
+                for (Integer n : tempPath) {
+                    if (flag_first) {
+                        flag_first = false;
+                    } else {
+                        path.add(graph.getNode(n));
+                    }
+                }
+                holdCities.remove(destI);
+                src = currentdest;
+            }
+            if(current<minPath)
+            {
+                minPath=current;
+                bestPath=path;
+            }
+        }
+        return bestPath;
+    }
 }
-

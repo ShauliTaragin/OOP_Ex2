@@ -1,9 +1,12 @@
 package implementaions;
 
 import api.DirectedWeightedGraph;
+import api.EdgeData;
 import api.NodeData;
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
@@ -11,6 +14,8 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     public MyDWGAlgo(String file){
         this.graph = null;
         load(file);
+    }
+    public MyDWGAlgo(){
     }
     /**
      * Inits the graph on which this set of algorithms operates on.
@@ -128,7 +133,8 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        return null;
+        IsConnectedAlgo tsp_algo =new IsConnectedAlgo(this.graph.getNodes());
+        return tsp_algo.Shortest_path_in_given_nodes(cities, this.graph);
     }
 
     /**
