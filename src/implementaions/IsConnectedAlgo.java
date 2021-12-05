@@ -180,7 +180,8 @@ public class IsConnectedAlgo {
         return ans;
     }
     public List<NodeData> Shortest_path_in_given_nodes(List<NodeData> cities,MyDWG graph){
-        if(!findPath(cities,graph))
+        //if(!findPath(cities,graph))
+        if (false)
         {
             return null;
         }
