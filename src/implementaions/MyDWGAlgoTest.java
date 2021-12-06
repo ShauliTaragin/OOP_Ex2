@@ -16,8 +16,6 @@ class MyDWGAlgoTest {
     MyDWGAlgo best_algo_4 = new MyDWGAlgo("data/Not_connected_G.json");
     MyDWGAlgo best_algo_5 = new MyDWGAlgo("data/1000Nodes.json");
     MyDWGAlgo best_algo_6 = new MyDWGAlgo("data/10000Nodes.json");
-    MyDWGAlgo best_algo_7 = new MyDWGAlgo("data/10000Nodes_notcon.json");
-
 
     @Test
     void init() {
@@ -46,7 +44,6 @@ class MyDWGAlgoTest {
         assertFalse(best_algo_4.isConnected());
         assertTrue(best_algo_5.isConnected());
         assertTrue(best_algo_6.isConnected());
-        assertFalse(best_algo_7.isConnected());
 
     }
 
@@ -75,8 +72,8 @@ class MyDWGAlgoTest {
 //        assertEquals(0 , best_algo_2.center().getKey());
 //        assertEquals(40 , best_algo_3.center().getKey());
 //        assertNull(best_algo_4.center());
-//        assertEquals(362, best_algo_5.center().getKey());
-        assertEquals(3846,best_algo_6.center().getKey());
+        assertEquals(362, best_algo_5.center().getKey());
+//        assertEquals(3846,best_algo_6.center().getKey());
 
     }
 
