@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Window extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
 
@@ -29,23 +29,32 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
     private void initGUI() {
         this.setSize(mWin_h, mWin_w);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        this.setTitle("Graph Algorithms");
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Menu");
         menuBar.add(menu);
         this.setMenuBar(menuBar);
+        MenuItem item1 = new MenuItem("Load");
+       // item1.addActionListener(this);
 
-        MenuItem item1 = new MenuItem("simpleTriangle");
-        item1.addActionListener(this);
+        MenuItem item2 = new MenuItem("Save");
+       // item2.addActionListener(this);
 
-        MenuItem item2 = new MenuItem("clean-up");
-        item2.addActionListener(this);
+        MenuItem item3 = new MenuItem("Draw");
+     //   item3.addActionListener(this);
+        MenuItem item3_1 =new MenuItem("Center");
+        item3_1.addActionListener(this);
 
         menu.add(item1);
         menu.add(item2);
-
+        menu.add(item3);
+        menu.add(item3_1);
+        JButton button = new JButton();
+        JLabel label = new JLabel();
+        label.setText("heelo");
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
+        this.add(label);
     }
 
 
