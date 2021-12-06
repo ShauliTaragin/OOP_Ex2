@@ -29,17 +29,20 @@ public class DijkstraUsingMinHeap {
             this.heapNodes.clear();
             this.parents.clear();
             double INFINITY = Double.MAX_VALUE;
-            boolean[] SPT = new boolean[this.graph.getNodes().size()];
             Iterator<NodeData> nodeIterator = this.graph.nodeIter();
             while (nodeIterator.hasNext()) {
                 int node_key = nodeIterator.next().getKey();
                 this.heapNodes.put(node_key, INFINITY);
+                if(node_key>index){
+                    index=node_key;
+                }
             }
+            boolean[] SPT = new boolean[index+1];
             this.parents.put(sourceVertex,sourceVertex);
             this.heapNodes.replace(sourceVertex, 0.0);
             //decrease the distance for the first index
             //add all the vertices to the MinHeap
-            MinHeap minHeap = new MinHeap(this.graph.getNodes().size(), sourceVertex, this.graph);
+            MinHeap minHeap = new MinHeap(this.graph.getNodes().size(), sourceVertex, this.graph,index+1);
             nodeIterator = this.graph.nodeIter();
             try {
                 while (nodeIterator.hasNext()) {
@@ -113,10 +116,10 @@ public class DijkstraUsingMinHeap {
         int [] indexes; //will be used to decrease the distance
 
 
-        public MinHeap(int capacity, int key, MyDWG graph) {
+        public MinHeap(int capacity, int key, MyDWG graph,int size) {
             this.capacity = capacity;
             this.mH = new MyNode[capacity];
-            this.indexes = new int[capacity];
+            this.indexes = new int[size];
             this.mH[0] = (graph.getMyNode(key));
             this.mH[0].getNode().setWeight(0.0);
             this.currentSize = 0;
@@ -152,7 +155,6 @@ public class DijkstraUsingMinHeap {
                 parentIdx = parentIdx/2;
             }
         }
-
         public MyNode extractMin() {
             MyNode min = mH[0];
             MyNode lastNode = mH[currentSize];
