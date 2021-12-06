@@ -4,6 +4,7 @@ import api.NodeData;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +15,7 @@ class MyDWGAlgoTest {
     MyDWGAlgo best_algo_3 = new MyDWGAlgo("data/G3.json");
     MyDWGAlgo best_algo_4 = new MyDWGAlgo("data/Not_connected_G.json");
     MyDWGAlgo best_algo_5 = new MyDWGAlgo("data/1000Nodes.json");
+    MyDWGAlgo best_algo_6= new MyDWGAlgo("data/10000Nodes.json");
     @Test
     void init() {
     best_algo_1.init(best_algo_4.getGraph());
@@ -31,8 +33,17 @@ class MyDWGAlgoTest {
 
     @Test
     void isConnected() {
-     assertTrue(best_algo_1.isConnected());
-     assertFalse(best_algo_4.isConnected());
+//        DijkstraUsingMinHeap.Graph g=  new DijkstraUsingMinHeap.Graph((MyDWG) best_algo_5.getGraph());
+//        Iterator<NodeData> iterator =best_algo_5.getGraph().nodeIter();
+//        while(iterator.hasNext()) {
+//            g.dijkstra_GetMinDistances(iterator.next().getKey());
+//            if (g.heapNodes.containsValue(Double.MAX_VALUE)) ;
+//        }
+        assertTrue(best_algo_6.isConnected());
+//     assertTrue(best_algo_1.isConnected());
+//     assertFalse(best_algo_4.isConnected());
+//     assertTrue(best_algo_5.isConnected());
+
     }
 
     @Test
@@ -55,13 +66,14 @@ class MyDWGAlgoTest {
     }
     @Test
     void center() {
-        assertEquals(8 , best_algo_1.center().getKey());
-        assertEquals(0 , best_algo_2.center().getKey());
-        assertEquals(40 , best_algo_3.center().getKey());
-        assertNull(best_algo_4.center());
-       // assertEquals(362 , best_algo_5.center().getKey());
-    }
+//        assertEquals(8 , best_algo_1.center().getKey());
+//        assertEquals(0 , best_algo_2.center().getKey());
+//        assertEquals(40 , best_algo_3.center().getKey());
+//        assertNull(best_algo_4.center());
+        assertEquals(362 , best_algo_5.center().getKey());
+//        assertEquals(3846,best_algo_6.center().getKey());
 
+    }
     @Test
     void tsp() {
         List<NodeData> cities = new ArrayList<>();

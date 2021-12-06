@@ -1,11 +1,10 @@
 package implementaions;
 
 import api.DirectedWeightedGraph;
-import api.EdgeData;
 import api.NodeData;
-import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +15,12 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
         load(file);
     }
     public MyDWGAlgo(){
+    }
+    public MyDWG getMyGraph(){
+        return this.graph;
+    }
+    public HashMap<Integer, MyNode> getNodes(){
+        return this.graph.getNodes();
     }
     /**
      * Inits the graph on which this set of algorithms operates on.
@@ -53,12 +58,13 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public boolean isConnected() {
-        IsConnectedAlgo shortest_path_algo = new IsConnectedAlgo(this.graph.getNodes());
-        for (Integer i :this.graph.getNodes().keySet()) {
-            ArrayList<Integer> holds_answers = new ArrayList<>();
-            holds_answers = shortest_path_algo.dijkstra(i,this.graph,0,0);//dest dosent matter
-            if (holds_answers.get(0)==-1)
-                return false;
+        IsConnectedAlgo is_graph_connected_algo = new IsConnectedAlgo(this.graph.getNodes());
+        if(!is_graph_connected_algo.bfs(this.graph)){
+            return false;
+        }
+        MyDWG reveresd_graph = is_graph_connected_algo.reverse(this.graph);
+        if(!is_graph_connected_algo.bfs(reveresd_graph)){
+            return false;
         }
         return true;
     }
@@ -110,15 +116,17 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     public NodeData center() {
         if(!isConnected())
             return null;
-        IsConnectedAlgo center_algo =new IsConnectedAlgo(this.graph.getNodes());
+        DijkstraUsingMinHeap.Graph g=  new DijkstraUsingMinHeap.Graph(this.graph);
         double min = Double.MAX_VALUE;
         int key_holder = -1;
-        ArrayList<Double> holds_ans = new ArrayList<>();
-        for (Integer key : this.graph.getNodes().keySet()) {
-            holds_ans= center_algo.dijkstra(key , this.graph , 2 , 0);
-            if(holds_ans.get(0) < min){
-                min = holds_ans.get(0);
-                key_holder = key;
+        Iterator<NodeData> iterator =this.getGraph().nodeIter();
+        while(iterator.hasNext()) {
+            NodeData node=iterator.next();
+            g.dijkstra_GetMinDistances(node.getKey());
+            System.out.println(node.getKey()+" is-"+g.max);
+            if(g.max < min){
+                min = g.max;
+                key_holder = node.getKey();
             }
         }
         return this.graph.getNode(key_holder);

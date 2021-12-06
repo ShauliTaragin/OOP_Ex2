@@ -11,6 +11,8 @@ public class IsConnectedAlgo {
     private HashMap<Integer, MyNode> nodes;
     private final Double INFINITY = Double.MAX_VALUE;
     private HashMap<Integer, Double> temp;
+    private double max;
+    private double maxNode;
     // Constructor of this class
     public IsConnectedAlgo( HashMap<Integer, MyNode> nodes) {
         // This keyword refers to current object itself
@@ -19,12 +21,15 @@ public class IsConnectedAlgo {
         this.dist = new HashMap<>();//this needs to be connected to
         this.settled = new ArrayList<>();
         this.ts = new TreeSet(new MyNode());
+        this.max=0;
+        this.maxNode=0;
 
     }
     // Dijkstra's Algorithm
     public ArrayList dijkstra(int src,MyDWG graph,int func,int dest) {
         Iterator<NodeData> nodeIterator= graph.nodeIter();
-
+        this.max=0;
+        this.maxNode=0;
         while(nodeIterator.hasNext()) {
             int node_key = nodeIterator.next().getKey();
             this.temp.put(node_key,INFINITY);
@@ -59,7 +64,6 @@ public class IsConnectedAlgo {
             if (this.settled.contains(u)) {
                 continue;
             }
-
             // We don't have to call e_Neighbors(u)
             // if u is already present in the settled set.
             this.settled.add(u);
@@ -67,7 +71,12 @@ public class IsConnectedAlgo {
 //            MyNode node1=new MyNode(graph.getNode(u));
 //            node1.getNode().setWeight(0.0);
 //            this.pq.add(node1);
+            if(this.temp.get(u)>this.maxNode){
+                this.maxNode=this.temp.get(u);
+            }
+
         }
+
         switch (func){
             case 0:
                 return checkIfConnect();
@@ -99,6 +108,9 @@ public class IsConnectedAlgo {
                     node1.getNode().setWeight(newDistance);
                     this.ts.add(node1);
                     this.temp.replace(i,newDistance);
+                    if(this.max<=newDistance){
+                        this.max=newDistance;
+                    }
                 }
             }
         }
@@ -108,12 +120,10 @@ public class IsConnectedAlgo {
     }
     private ArrayList<Integer> checkIfConnect(){
         ArrayList<Integer> ans=new ArrayList<>();
-        for(Double val:this.temp.values()){
-            if(val==INFINITY){
+            if(this.maxNode==(INFINITY)){
                 ans.add(-1);
                 return ans;
             }
-        }
         this.ts.clear();
         this.dist.clear();
         this.settled.clear();
@@ -166,17 +176,17 @@ public class IsConnectedAlgo {
     }
     private ArrayList findGraphCenter(){
         ArrayList<Double> ans=new ArrayList<>();
-        double max = 0.;
-        for (Double value : this.temp.values()) {
-            if(value > max) {
-                max = value;
-            }
-        }
+//        double max = 0.;
+//        for (Double value : this.temp.values()) {
+//            if(value > max) {
+//                max = value;
+//            }
+//        }
         this.ts.clear();
         this.dist.clear();
         this.settled.clear();
         this.temp.clear();
-        ans.add(max);
+        ans.add(this.max);
         return ans;
     }
     public List<NodeData> Shortest_path_in_given_nodes(List<NodeData> cities,MyDWG graph){
@@ -229,5 +239,70 @@ public class IsConnectedAlgo {
             }
         }
         return bestPath;
+    }
+    /**
+     * regular dfs using tag of each node to mark whether the node as been visited or not
+     * @param graph
+     * map:
+     * 0 -> not_visited
+     * 1 -> visited
+     *
+     * @return
+     */
+    public boolean bfs(MyDWG graph){
+        boolean flag = true;
+        Iterator<NodeData> iterator = graph.nodeIter();
+        while(iterator.hasNext()){ //first lets set tag of all nodes to 0 e.g not visited
+            iterator.next().setTag(0);
+        }
+        Queue<Integer> queue = new LinkedList<Integer>();
+        //get first node and run bfs from it
+        for(Integer key : graph.getNodes().keySet()) {
+            if (!flag){
+                break;
+            }
+            flag=false;
+            NodeData src =  graph.getNode(key);
+            queue.add(key);
+            src.setTag(1);
+        }
+        while(!queue.isEmpty()){
+            Integer current_nodes_key = queue.peek();
+            queue.poll();
+            for (Integer neigbor_key : graph.getNodes().get(current_nodes_key).getConnectedTo().keySet()) {
+                NodeData current_neigbor_node = graph.getNode(neigbor_key);
+                if (current_neigbor_node.getTag()==0){
+                    current_neigbor_node.setTag(1);
+                    queue.add(neigbor_key);
+                }
+            }
+        }
+        //now we check if dfs returns false when starting from first node
+        Iterator<NodeData> iterator2 = graph.nodeIter();
+        while(iterator2.hasNext()){ //if we find for some node that its tag is 0 e.g hasn't been visited then return false.
+            if(iterator2.next().getTag()==0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public MyDWG reverse(MyDWG graph){
+        MyDWG reversed_graph =  new MyDWG();
+        for(Integer connected_key : graph.getNodes().keySet()){//traverse through each node
+            if(!reversed_graph.getNodes().containsKey(connected_key)) {//only if graph dosent already have the node then add it
+                NodeData src_bfr_reverse = graph.getNode(connected_key);
+                reversed_graph.addNode(src_bfr_reverse);
+            }
+            for (Integer neighbor_of_connected_key:graph.getNodes().get(connected_key).getConnectedTo().keySet()){//traverse through edges coming out of each node
+                if(!reversed_graph.getNodes().containsKey(neighbor_of_connected_key)) {//only if graph dosent already have the node then add it
+                    NodeData dst_bfr_reverse= graph.getNode(neighbor_of_connected_key);
+                    reversed_graph.addNode(dst_bfr_reverse);
+                }
+                double weight_of_reversed_edge = graph.getNodes().get(neighbor_of_connected_key).getConnectedFrom().get(connected_key);
+                reversed_graph.connect(neighbor_of_connected_key , connected_key ,weight_of_reversed_edge );
+            }
+        }
+        return reversed_graph;
     }
 }
