@@ -11,7 +11,7 @@ public class DijkstraUsingMinHeap {
     static class Graph {
         Double max;
         MyDWG graph;
-        HashMap<Integer, HashMap<Integer, Double>> adjacencylist;
+        HashMap<Integer, Integer> parents;
         HashMap<Integer, Double> heapNodes;
 
         public Graph(MyDWG graph) {
@@ -20,16 +20,14 @@ public class DijkstraUsingMinHeap {
             this.max=0.0;
             this.heapNodes=new HashMap<Integer, Double>();
             this.graph = (MyDWG) newGraph.copy();
-            this.adjacencylist = new HashMap<Integer, HashMap<Integer, Double>>();
+            this.parents = new HashMap<Integer, Integer>();
             //initialize adjacency lists for all the vertices
-            for (int i = 0; i < this.graph.getNodes().size(); i++) {
-                this.adjacencylist.put(i, new HashMap<Integer, Double>());
-            }
         }
         public void dijkstra_GetMinDistances(int sourceVertex) {
+            int index=0;
             this.max=0.0;
             this.heapNodes.clear();
-            this.adjacencylist.clear();
+            this.parents.clear();
             double INFINITY = Double.MAX_VALUE;
             boolean[] SPT = new boolean[this.graph.getNodes().size()];
             Iterator<NodeData> nodeIterator = this.graph.nodeIter();
@@ -37,9 +35,9 @@ public class DijkstraUsingMinHeap {
                 int node_key = nodeIterator.next().getKey();
                 this.heapNodes.put(node_key, INFINITY);
             }
+            this.parents.put(sourceVertex,sourceVertex);
             this.heapNodes.replace(sourceVertex, 0.0);
             //decrease the distance for the first index
-
             //add all the vertices to the MinHeap
             MinHeap minHeap = new MinHeap(this.graph.getNodes().size(), sourceVertex, this.graph);
             nodeIterator = this.graph.nodeIter();
@@ -74,11 +72,12 @@ public class DijkstraUsingMinHeap {
                             if (currentKey > newKey) {
                                 decreaseKey(minHeap, newKey, destination);
                                 this.heapNodes.replace(destination, newKey);
+                                this.parents.put(destination,extractedVertex);
                             }
                         }
                     }
                 }
-               this.max =minHeap.mH[0].getNode().getWeight();
+                this.max =minHeap.mH[0].getNode().getWeight();
                 //print SPT
                 //printDijkstra(this.heapNodes, sourceVertex);
             }
@@ -106,7 +105,7 @@ public class DijkstraUsingMinHeap {
             }
 
         }
-        }
+    }
     static class MinHeap{
         int capacity;
         int currentSize;
@@ -126,7 +125,7 @@ public class DijkstraUsingMinHeap {
             for (int i = 0; i <=currentSize; i++) {
                 System.out.println(" " + mH[i].getNode().getKey() + " distance " + mH[i].getNode().getWeight());
             }
-            System.out.println("________________________");
+            System.out.println("________");
         }
 
         public void insert(MyNode x) {

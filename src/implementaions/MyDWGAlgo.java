@@ -58,12 +58,11 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public boolean isConnected() {
-        IsConnectedAlgo is_graph_connected_algo = new IsConnectedAlgo(this.graph.getNodes());
-        if(!is_graph_connected_algo.bfs(this.graph)){
+        if(!HelperAlgo.bfs(this.graph)){
             return false;
         }
-        MyDWG reveresd_graph = is_graph_connected_algo.reverse(this.graph);
-        if(!is_graph_connected_algo.bfs(reveresd_graph)){
+        MyDWG reveresd_graph = HelperAlgo.reverse(this.graph);
+        if(!HelperAlgo.bfs(reveresd_graph)){
             return false;
         }
         return true;
@@ -78,10 +77,9 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public double shortestPathDist(int src, int dest) {
-        IsConnectedAlgo shortest_path_algo =new IsConnectedAlgo(this.graph.getNodes());
-        ArrayList<Double> ans=new ArrayList<Double>();
-        ans=shortest_path_algo.dijkstra(src,this.graph,1,dest);
-        return ans.get(0);
+        DijkstraUsingMinHeap.Graph g=new DijkstraUsingMinHeap.Graph(this.graph);
+        g.dijkstra_GetMinDistances(src);
+        return g.heapNodes.get(dest);
     }
 
     /**
@@ -96,13 +94,15 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest){
-        IsConnectedAlgo shortest_path_algo =new IsConnectedAlgo(this.graph.getNodes());
-        ArrayList<Integer> ans=new ArrayList<Integer>();
-        ans=shortest_path_algo.dijkstra(src,this.graph,3,dest);
+        DijkstraUsingMinHeap.Graph g=new DijkstraUsingMinHeap.Graph(this.graph);
+        g.dijkstra_GetMinDistances(src);
         ArrayList<NodeData> nodes =new ArrayList<>();
-        for(int i =0;i<ans.size();i++){
-            nodes.add(this.graph.getNode(ans.get(i)));
+        int key=dest;
+        while(key!=src) {
+            nodes.add(0,this.graph.getNode(key));
+            key=g.parents.get(key);
         }
+        nodes.add(0,this.graph.getNode(src));
         return nodes;
     }
 
@@ -141,8 +141,53 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        IsConnectedAlgo tsp_algo =new IsConnectedAlgo(this.graph.getNodes());
-        return tsp_algo.Shortest_path_in_given_nodes(cities, this.graph);
+        if(!HelperAlgo.findPath(cities,graph)) {
+            return null;
+        }
+        List<NodeData> bestPath=new ArrayList<>();
+        double minPath =Double.MAX_VALUE;
+        for(int j=0;j<cities.size();j++) {
+            ArrayList<NodeData> holdCities=new ArrayList<>(cities);
+            double current=0;
+            List<NodeData> path=new ArrayList<NodeData>();
+            int srcI = j;
+            int src = cities.get(srcI).getKey();
+            int destI = 0, currentdest = 0;
+            holdCities.remove(srcI);
+            path.add(graph.getNode(src));
+            double ans ;
+            while (!holdCities.isEmpty()) {
+                double minDist = Double.MAX_VALUE;
+                for (int i = 0; i < holdCities.size(); i++) {
+                    ans = shortestPathDist(src, holdCities.get(i).getKey());
+                    double dist = ans;
+                    if (dist < minDist) {
+                        minDist = dist;
+                        currentdest = holdCities.get(i).getKey();
+                        destI = i;
+                    }
+                }
+                current+=minDist;
+                ArrayList<NodeData> tempPath = (ArrayList<NodeData>) shortestPath(src , currentdest);
+                if (tempPath == null) return null;
+                boolean flag_first = true;
+                for (NodeData n : tempPath) {
+                    if (flag_first) {
+                        flag_first = false;
+                    } else {
+                        path.add(n);
+                    }
+                }
+                holdCities.remove(destI);
+                src = currentdest;
+            }
+            if(current<minPath)
+            {
+                minPath=current;
+                bestPath=path;
+            }
+        }
+        return bestPath;
     }
 
     /**
