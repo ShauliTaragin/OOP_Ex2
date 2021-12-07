@@ -5,41 +5,45 @@ import api.NodeData;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class DijkstraUsingMinHeap {
     static class Graph {
         Double max;
         MyDWG graph;
-        HashMap<Integer, Integer> parents;
-        HashMap<Integer, Double> heapNodes;
-
+        //        HashMap<Integer, Integer> parents;
+//        HashMap<Integer, Double> heapNodes;
+        Double [] heapNodes;
+        Integer [] parents;
         public Graph(MyDWG graph) {
             MyDWGAlgo newGraph=new MyDWGAlgo();
             newGraph.init(graph);
             this.max=0.0;
-            this.heapNodes=new HashMap<Integer, Double>();
+//            this.heapNodes=new HashMap<Integer, Double>();
+//            this.heapNodes=new Double[0];
             this.graph = (MyDWG) newGraph.copy();
-            this.parents = new HashMap<Integer, Integer>();
+//            this.parents = new HashMap<Integer, Integer>();
             //initialize adjacency lists for all the vertices
         }
         public void dijkstra_GetMinDistances(int sourceVertex) {
             int index=0;
             this.max=0.0;
-            this.heapNodes.clear();
-            this.parents.clear();
+            //this.heapNodes.clear();
+//            this.parents.clear();
             double INFINITY = Double.MAX_VALUE;
             Iterator<NodeData> nodeIterator = this.graph.nodeIter();
             while (nodeIterator.hasNext()) {
                 int node_key = nodeIterator.next().getKey();
-                this.heapNodes.put(node_key, INFINITY);
+                //this.heapNodes.put(node_key, INFINITY);
                 if(node_key>index){
                     index=node_key;
                 }
             }
-            boolean[] SPT = new boolean[index+1];
-            this.parents.put(sourceVertex,sourceVertex);
-            this.heapNodes.replace(sourceVertex, 0.0);
+            boolean[] extracted = new boolean[index+1];
+//            this.parents.put(sourceVertex,sourceVertex);
+            this.heapNodes=new Double[index+1];
+            this.parents=new Integer[index+1];
+            this.parents[sourceVertex]=sourceVertex;
+            //this.heapNodes.replace(sourceVertex, 0.0);
             //decrease the distance for the first index
             //add all the vertices to the MinHeap
             MinHeap minHeap = new MinHeap(this.graph.getNodes().size(), sourceVertex, this.graph,index+1);
@@ -49,8 +53,10 @@ public class DijkstraUsingMinHeap {
                     int key = nodeIterator.next().getKey();
                     if (key != sourceVertex) {
                         minHeap.insert(this.graph.getMyNode(key));
+                        this.heapNodes[key]=INFINITY;
                     }
                 }
+                this.heapNodes[sourceVertex]=0.0;
                 //while minHeap is not empty
                 while (!minHeap.isEmpty()) {
                     //extract the min
@@ -58,7 +64,7 @@ public class DijkstraUsingMinHeap {
 
                     //extracted vertex
                     int extractedVertex = extractedNode.getNode().getKey();
-                    SPT[extractedVertex] = true;
+                    extracted[extractedVertex] = true;
 
                     //iterate through all the adjacent vertices
                     Iterator<EdgeData> edges = this.graph.edgeIter(extractedVertex);
@@ -66,21 +72,26 @@ public class DijkstraUsingMinHeap {
                         EdgeData edge = edges.next();
                         int destination = edge.getDest();
                         //only if destination vertex is not present in SPT
-                        if (SPT[destination] == false) {
+                        if (extracted[destination] == false) {
                             ///check if distance needs an update or not
                             //means check total weight from source to vertex_V is less than
                             //the current distance value, if yes then update the distance
-                            double newKey = this.heapNodes.get(extractedVertex) + edge.getWeight();
-                            double currentKey = this.heapNodes.get(destination);
+//                            double newKey = this.heapNodes.get(extractedVertex) + edge.getWeight();
+//                            double currentKey = this.heapNodes.get(destination);
+                            double newKey =this.heapNodes[extractedVertex]+edge.getWeight();
+                            double currentKey =this.heapNodes[destination];
                             if (currentKey > newKey) {
                                 decreaseKey(minHeap, newKey, destination);
-                                this.heapNodes.replace(destination, newKey);
-                                this.parents.put(destination,extractedVertex);
+//                                this.heapNodes.replace(destination, newKey);
+                                this.heapNodes[destination]=newKey;
+                                this.parents[destination]=extractedVertex;
+//                                this.parents.put(destination,extractedVertex);
+
                             }
                         }
                     }
                 }
-                this.max =minHeap.mH[0].getNode().getWeight();
+                this.max =minHeap.nodeHolder[0].getNode().getWeight();
                 //print SPT
                 //printDijkstra(this.heapNodes, sourceVertex);
             }
@@ -92,10 +103,10 @@ public class DijkstraUsingMinHeap {
         public void decreaseKey(MinHeap minHeap, double newKey, int vertex){
 
             //get the index which distance's needs a decrease;
-            int index = minHeap.indexes[vertex];
+            int index = minHeap.indexOfNodes[vertex];
 
             //get the node and update its value
-            MyNode node = minHeap.mH[index];
+            MyNode node = minHeap.nodeHolder[index];
             node.getNode().setWeight(newKey);
             minHeap.bubbleUp(index);
         }
@@ -110,60 +121,60 @@ public class DijkstraUsingMinHeap {
         }
     }
     static class MinHeap{
-        int capacity;
-        int currentSize;
-        MyNode[] mH;
-        int [] indexes; //will be used to decrease the distance
+        int numOfNodes;
+        int currentHeapSize;
+        MyNode[] nodeHolder;
+        int [] indexOfNodes; //will be used to decrease the distance
 
 
         public MinHeap(int capacity, int key, MyDWG graph,int size) {
-            this.capacity = capacity;
-            this.mH = new MyNode[capacity];
-            this.indexes = new int[size];
-            this.mH[0] = (graph.getMyNode(key));
-            this.mH[0].getNode().setWeight(0.0);
-            this.currentSize = 0;
+            this.numOfNodes = capacity;
+            this.nodeHolder = new MyNode[capacity];
+            this.indexOfNodes = new int[size];
+            this.nodeHolder[0] = (graph.getMyNode(key));
+            this.nodeHolder[0].getNode().setWeight(0.0);
+            this.currentHeapSize = 0;
         }
         public void display() {
-            for (int i = 0; i <=currentSize; i++) {
-                System.out.println(" " + mH[i].getNode().getKey() + " distance " + mH[i].getNode().getWeight());
+            for (int i = 0; i <= currentHeapSize; i++) {
+                System.out.println(" " + nodeHolder[i].getNode().getKey() + " distance " + nodeHolder[i].getNode().getWeight());
             }
-            System.out.println("________");
+            System.out.println("____");
         }
 
         public void insert(MyNode x) {
-            this.currentSize++;
-            int idx =this.currentSize;
-            this.mH[idx] = x;
-            this.mH[idx].getNode().setWeight(Double.MAX_VALUE);
-            this.indexes[x.getNode().getKey()] = idx;
+            this.currentHeapSize++;
+            int idx =this.currentHeapSize;
+            this.nodeHolder[idx] = x;
+            this.nodeHolder[idx].getNode().setWeight(Double.MAX_VALUE);
+            this.indexOfNodes[x.getNode().getKey()] = idx;
             bubbleUp(idx);
         }
 
         public void bubbleUp(int pos) {
             int parentIdx = pos/2;
             int currentIdx = pos;
-            while (currentIdx > 0 && mH[parentIdx].getNode().getWeight() > mH[currentIdx].getNode().getWeight()) {
-                MyNode currentNode = mH[currentIdx];
-                MyNode parentNode = mH[parentIdx];
+            while (currentIdx > 0 && this.nodeHolder[parentIdx].getNode().getWeight() > this.nodeHolder[currentIdx].getNode().getWeight()) {
+                MyNode currentNode = this.nodeHolder[currentIdx];
+                MyNode parentNode = this.nodeHolder[parentIdx];
 
                 //swap the positions
-                indexes[currentNode.getNode().getKey()] = parentIdx;
-                indexes[parentNode.getNode().getKey()] = currentIdx;
+                this.indexOfNodes[currentNode.getNode().getKey()] = parentIdx;
+                this.indexOfNodes[parentNode.getNode().getKey()] = currentIdx;
                 swap(currentIdx,parentIdx);
                 currentIdx = parentIdx;
                 parentIdx = parentIdx/2;
             }
         }
         public MyNode extractMin() {
-            MyNode min = mH[0];
-            MyNode lastNode = mH[currentSize];
+            MyNode min = this.nodeHolder[0];
+            MyNode lastNode = this.nodeHolder[this.currentHeapSize];
 // update the indexes[] and move the last node to the top
-            indexes[lastNode.getNode().getKey()] = 0;
-            mH[0] = lastNode;
-            mH[currentSize] = null;
+            this.indexOfNodes[lastNode.getNode().getKey()] = 0;
+            this.nodeHolder[0] = lastNode;
+            this.nodeHolder[currentHeapSize] = null;
             sinkDown(0);
-            this.currentSize--;
+            this.currentHeapSize--;
             return min;
         }
 
@@ -171,37 +182,37 @@ public class DijkstraUsingMinHeap {
             int smallest = k;
             int leftChildIdx = 2 * k;
             int rightChildIdx = 2 * k+1;
-            if (leftChildIdx < heapSize() && mH[smallest].getNode().getWeight() > mH[leftChildIdx].getNode().getWeight()) {
+            if (leftChildIdx < heapSize() && this.nodeHolder[smallest].getNode().getWeight() > this.nodeHolder[leftChildIdx].getNode().getWeight()) {
                 smallest = leftChildIdx;
             }
-            if (rightChildIdx < heapSize() && mH[smallest].getNode().getWeight() > mH[rightChildIdx].getNode().getWeight()) {
+            if (rightChildIdx < heapSize() && this.nodeHolder[smallest].getNode().getWeight() > this.nodeHolder[rightChildIdx].getNode().getWeight()) {
                 smallest = rightChildIdx;
             }
             if (smallest != k) {
 
-                MyNode smallestNode = mH[smallest];
-                MyNode kNode = mH[k];
+                MyNode smallestNode = this.nodeHolder[smallest];
+                MyNode kNode = this.nodeHolder[k];
 
                 //swap the positions
-                indexes[smallestNode.getNode().getKey()] = k;
-                indexes[kNode.getNode().getKey()] = smallest;
+                this.indexOfNodes[smallestNode.getNode().getKey()] = k;
+                this.indexOfNodes[kNode.getNode().getKey()] = smallest;
                 swap(k, smallest);
                 sinkDown(smallest);
             }
         }
 
         public void swap(int a, int b) {
-            MyNode temp = mH[a];
-            mH[a] = mH[b];
-            mH[b] = temp;
+            MyNode temp = this.nodeHolder[a];
+            this.nodeHolder[a] = this.nodeHolder[b];
+            this.nodeHolder[b] = temp;
         }
 
         public boolean isEmpty() {
-            return currentSize == 0;
+            return this.currentHeapSize == 0;
         }
 
         public int heapSize(){
-            return currentSize;
+            return this.currentHeapSize;
         }
     }
 }
