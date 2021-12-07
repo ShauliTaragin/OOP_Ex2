@@ -9,6 +9,7 @@ import org.w3c.dom.Node;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -122,7 +123,7 @@ public class Window extends JFrame implements ActionListener {
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
         rbMenuItem.setSelected(true);
-        rbMenuItem.setMnemonic(KeyEvent.VK_R);
+        //rbMenuItem.setMnemonic(KeyEvent.VK_R);
         group.add(rbMenuItem);
 
         JButton button = new JButton();
@@ -147,6 +148,7 @@ public class Window extends JFrame implements ActionListener {
     public void paintComponents(Graphics g) {
         if(this.best_algo == null)return;
         super.paintComponents(g);
+        double theta;
         Iterator<EdgeData> edges =best_algo.getGraph().edgeIter();
         while(edges.hasNext()){
             EdgeData edge=edges.next();
@@ -156,14 +158,17 @@ public class Window extends JFrame implements ActionListener {
             double x2 =(best_algo.getGraph().getNode(edge.getDest()).getLocation().x()-this.Minx)*this.scale_lon+60;
             double y2 = (best_algo.getGraph().getNode(edge.getDest()).getLocation().y()-this.Miny)*this.scale_lat+60;
             g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
+            //drawArrowLine(g,(int)x1,(int)y1,(int)x2,(int)y2,15,3);
+            theta = Math.atan2(y2 - y1, x2 - x1);
+            drawArrow(g, theta, x2, y2);
+            //arrHead (g,x1,y1,x2,y2);
         }
         for (MyNode node : best_algo.getMyGraph().getNodes().values()) {
             double x = (node.getNode().getLocation().x()-this.Minx)*(this.scale_lon)+60;
             double y = (node.getNode().getLocation().y()-this.Miny)*(this.scale_lat)+60;
 
             g.setColor(new Color(0,100,150));
-            g.fillOval((int) x-kRADIUS, (int) y-kRADIUS ,
-                    2 * kRADIUS, 2 * kRADIUS);
+            g.fillOval((int) x-kRADIUS, (int) y-kRADIUS , 2 * kRADIUS, 2 * kRADIUS);
         }
 
 //        if (mDraw_pivot
@@ -188,7 +193,93 @@ public class Window extends JFrame implements ActionListener {
 //
 //        }
     }
-
+//    private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
+//        int dx = x2 - x1, dy = y2 - y1;
+//        double D = Math.sqrt(dx * dx + dy * dy);
+//        double xm = D - d, xn = xm, ym = h, yn = -h, x;
+//        double sin = dy / D, cos = dx / D;
+//
+//        x = xm * cos - ym * sin + x1;
+//        ym = xm * sin + ym * cos + y1;
+//        xm = x;
+//
+//        x = xn * cos - yn * sin + x1;
+//        yn = xn * sin + yn * cos + y1;
+//        xn = x;
+//
+//        int[] xpoints = {
+//                x2,
+//                (int) xm,
+//                (int) xn
+//        };
+//        int[] ypoints = {
+//                y2,
+//                (int) ym,
+//                (int) yn
+//        };
+//        g.setColor(Color.YELLOW);
+//        g.drawLine(x1, y1, x2, y2);
+//        g.setColor(Color.black);
+//        g.fillPolygon(xpoints, ypoints, 3);
+//
+//    }
+//    public static final double angle = Math.PI/18;
+//    public static final double len = 17;
+//    private void arrHead (Graphics g,double x1, double y1, double x2, double y2)
+//    {
+//        double ax1,ay1, ax2, ay2;
+//        double c,a,beta,theta,phi;
+//        c = Math.sqrt ((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+//        if (Math.abs(x2-x1) < 1e-6)
+//            if (y2<y1) theta = Math.PI/2;
+//            else theta = - Math.PI/2;
+//        else
+//        { if (x2>x1)
+//            theta = Math.atan ((y1-y2)/(x2-x1)) ;
+//        else
+//            theta = Math.atan ((y1-y2)/(x1-x2));
+//        }
+//        a = Math.sqrt (len*len  + c*c - 2*len*c*Math.cos(angle));
+//        beta = Math.asin (len*Math.sin(angle)/a);
+//        phi = theta - beta;
+//        ay1 = y1 - a * Math.sin(phi);		// coordinates of arrowhead endpoint
+//        if (x2>x1)
+//            ax1 = x1 + a * Math.cos(phi);
+//        else
+//            ax1 = x1 - a * Math.cos(phi);
+//        phi = theta + beta;				// second arrowhead endpoint
+//        ay2 = y1 - a * Math.sin(phi);
+//        if (x2>x1)
+//            ax2 = x1 + a * Math.cos(phi);
+//        else
+//            ax2 = x1 - a * Math.cos(phi);
+//        g.setColor(Color.black);
+//        g.drawLine((int)x2,(int)y2,(int)ax1,(int) ay1);
+//        g.drawLine((int)x2,(int)y2,(int)ax2,(int) ay2);    }
+    private void drawArrow(Graphics g, double theta, double x0, double y0)
+    {
+        double barb =13;
+        double phi = Math.PI/7;
+        double x = x0 - barb * Math.cos(theta + phi);
+        double y = y0 - barb * Math.sin(theta + phi);
+        double x1,y1;
+        g.setColor(Color.black);
+        //g.drawLine((int) x0, (int)y0,(int) x, (int)y);
+        x1 = x0 - barb * Math.cos(theta - phi);
+        y1 = y0 - barb * Math.sin(theta - phi);
+        //g.drawLine((int)x0,(int) y0, (int)x, (int)y);
+        int[] xpoints = {
+                (int) x1,
+                (int) x0,
+                (int) x
+        };
+        int[] ypoints = {
+                (int)y1,
+                (int) y0,
+                (int) y
+        };
+        g.fillPolygon(xpoints,ypoints,3);
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
 
