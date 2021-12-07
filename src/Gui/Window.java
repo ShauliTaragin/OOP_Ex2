@@ -2,9 +2,7 @@ package Gui;
 
 import api.EdgeData;
 import api.NodeData;
-import implementaions.MyDWG;
-import implementaions.MyDWGAlgo;
-import implementaions.MyNode;
+import implementaions.*;
 import org.w3c.dom.Node;
 
 import java.awt.*;
@@ -282,7 +280,13 @@ public class Window extends JFrame implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
+        mBuffer_image = createImage(mWin_w, mWin_h);
+        mBuffer_graphics = mBuffer_image.getGraphics();
+        this.getGraphics().drawImage(mBuffer_image, 0, 0, this);
 
+        Container container = getContentPane();
+        getContentPane().removeAll();
+        container.setLayout(new FlowLayout());
         switch (e.getActionCommand()) {
             case ("Load"):
                 JFileChooser fileChooser = new JFileChooser();
@@ -302,6 +306,36 @@ public class Window extends JFrame implements ActionListener {
                 break;
             case ("Show"):
 
+                break;
+            case ("AddNode"):
+                if (this.best_algo != null) {
+                    JLabel label_id = new JLabel("Enter id for Node");
+                    JTextField text_id = new JTextField();
+                    JLabel label_geoloc = new JLabel("Enter geo location for Node:");
+                    JTextField text_geoloc = new JTextField();
+
+                    JButton submit_button = new JButton("Submit");
+
+                    text_id.setPreferredSize(new Dimension(250, 40));
+                    text_geoloc.setPreferredSize(new Dimension(250, 40));
+                    submit_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            String[] geoloc = text_geoloc.getText().split(",");
+                            int id = Integer.parseInt(text_id.getText());
+                            GeoL geoL = new GeoL(Double.parseDouble(geoloc[0]), Double.parseDouble(geoloc[1]), 0.0);
+                            best_algo.getGraph().addNode(new NodeD(id, geoL));
+                            show_graph();
+                        }
+                    });
+                    container.add(label_id);
+                    container.add(text_id);
+                    container.add(label_geoloc);
+                    container.add(text_geoloc);
+                    container.add(submit_button);
+                    this.setVisible(true);
+                    break;
+                }
         }
     }
     public void caclulate_minmax(){
@@ -321,7 +355,14 @@ public class Window extends JFrame implements ActionListener {
         this.Absy = Math.abs(this.Miny-this.Maxy);
         this.scale_lon = ((this.mWin_w-100)/Absx);
         this.scale_lat = ((this.mWin_h-100)/Absy);
-
-
+    }
+    public void show_graph(){
+        mBuffer_image = createImage(mWin_w, mWin_h);
+        mBuffer_graphics = mBuffer_image.getGraphics();
+        this.getGraphics().drawImage(mBuffer_image, 0, 0, this);
+        Container container = getContentPane();
+        getContentPane().removeAll();
+        container.setLayout(new FlowLayout());
+        repaint();
     }
 }
