@@ -5,6 +5,7 @@ import api.NodeData;
 import implementaions.MyDWG;
 import implementaions.MyDWGAlgo;
 import implementaions.MyNode;
+import org.w3c.dom.Node;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -23,9 +24,10 @@ public class Window extends JFrame implements ActionListener {
 
     boolean mDraw_pivot = false;
     boolean mMoving_point = false;
+    private double Minx,Maxx,Maxy,Miny,Absx,Absy;
     private int kRADIUS = 5;
-    private int mWin_h = 500;
-    private int mWin_w = 500;
+    private int mWin_h ;
+    private int mWin_w ;
     private Image mBuffer_image;
     private Graphics mBuffer_graphics;
     private JMenuBar menuBar;
@@ -55,7 +57,11 @@ public class Window extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Graph Algorithms");
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(size.width / 2, size.height / 2);
+        this.mWin_w= (int)(size.width/1.5);
+        this.mWin_h= (int)(size.height/1.2);
+        System.out.println(mWin_w);
+        System.out.println(mWin_h);
+        this.setSize(this.mWin_w,this.mWin_h);
         this.setVisible(true);
         this.menuBar = new JMenuBar();
         this.main_menu = new JMenu("Menu");
@@ -119,7 +125,6 @@ public class Window extends JFrame implements ActionListener {
         rbMenuItem.setMnemonic(KeyEvent.VK_R);
         group.add(rbMenuItem);
 
-
         JButton button = new JButton();
         JLabel label = new JLabel();
         //    label.setText("heelo");
@@ -129,7 +134,7 @@ public class Window extends JFrame implements ActionListener {
 
     public void paint(Graphics g) {
         // Create a new "canvas"
-        mBuffer_image = createImage(mWin_w, mWin_h);
+        mBuffer_image = createImage(getWidth(),getHeight());
         mBuffer_graphics = mBuffer_image.getGraphics();
 
         // Draw on the new "canvas"
@@ -140,31 +145,25 @@ public class Window extends JFrame implements ActionListener {
     }
     @Override
     public void paintComponents(Graphics g) {
+        if(this.best_algo == null)return;
         super.paintComponents(g);
-        for (MyNode node : best_algo.getMyGraph().getNodes().values()) {
-            g.setColor(Color.BLUE);
-            g.fillOval((int) node.getNode().getLocation().x() - kRADIUS, (int) node.getNode().getLocation().y() - kRADIUS,
-                    2 * kRADIUS, 2 * kRADIUS);
-
-//            if (prev != null) {
-//                g.setColor(Color.RED);
-//                g.drawLine((int) p.x(), (int) p.y(),
-//                        (int) prev.x(), (int) prev.y());
-//
-//                double dist = prev.distance3D(p);
-//                g.drawString(String.format("%.2f", dist),
-//                        (int) ((p.x() + prev.x()) / 2),
-//                        (int) ((p.y() + prev.y()) / 2));
-//            }
-
-//            prev = p;
-        }
         Iterator<EdgeData> edges =best_algo.getGraph().edgeIter();
         while(edges.hasNext()){
             EdgeData edge=edges.next();
             g.setColor(Color.RED);
-                g.drawLine((int) best_algo.getGraph().getNode(edge.getSrc()).getLocation().x(), (int) best_algo.getGraph().getNode(edge.getSrc()).getLocation().y()
-                        , (int) best_algo.getGraph().getNode(edge.getDest()).getLocation().x(), (int) best_algo.getGraph().getNode(edge.getDest()).getLocation().y());
+            double x1 = (best_algo.getGraph().getNode(edge.getSrc()).getLocation().x()-this.Minx)*this.scale_lon+60;
+            double y1 = (best_algo.getGraph().getNode(edge.getSrc()).getLocation().y()-this.Miny)*this.scale_lat+60;
+            double x2 =(best_algo.getGraph().getNode(edge.getDest()).getLocation().x()-this.Minx)*this.scale_lon+60;
+            double y2 = (best_algo.getGraph().getNode(edge.getDest()).getLocation().y()-this.Miny)*this.scale_lat+60;
+            g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
+        }
+        for (MyNode node : best_algo.getMyGraph().getNodes().values()) {
+            double x = (node.getNode().getLocation().x()-this.Minx)*(this.scale_lon)+60;
+            double y = (node.getNode().getLocation().y()-this.Miny)*(this.scale_lat)+60;
+
+            g.setColor(new Color(0,100,150));
+            g.fillOval((int) x-kRADIUS, (int) y-kRADIUS ,
+                    2 * kRADIUS, 2 * kRADIUS);
         }
 
 //        if (mDraw_pivot
@@ -201,21 +200,7 @@ public class Window extends JFrame implements ActionListener {
                 if (response == JFileChooser.APPROVE_OPTION) {
                     File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                     this.best_algo = new MyDWGAlgo(file.toString());
-                    double Minx = Integer.MAX_VALUE;
-                    double Miny = Integer.MAX_VALUE;
-                    double Maxx = Integer.MIN_VALUE;
-                    double Maxy = Integer.MIN_VALUE;
-                    Iterator<NodeData> iterator = this.best_algo.getGraph().nodeIter();
-                    while(iterator.hasNext()) {
-                        if (iterator.next().getLocation().x()<Minx)Minx=iterator.next().getLocation().x();
-                        if (iterator.next().getLocation().x()>Maxx)Maxx=iterator.next().getLocation().x();
-                        if (iterator.next().getLocation().y()<Miny)Miny=iterator.next().getLocation().y();
-                        if (iterator.next().getLocation().y()<Maxy)Maxy=iterator.next().getLocation().y();
-                    }
-                    double Absx = Math.abs(Minx-Maxx);
-                    double Absy = Math.abs(Miny-Maxy);
-                    this.scale_lon = (getWidth()/Absx)*0.7;
-                    this.scale_lat = (getHeight()/Absy)*0.7;
+                    caclulate_minmax();
                     repaint();
                 }
                 break;
@@ -224,9 +209,28 @@ public class Window extends JFrame implements ActionListener {
 //                fileChooser.setCurrentDirectory(new File("./data"));
 //                int response = fileChooser.showSaveDialog(null);
                 break;
-
             case ("Show"):
 
         }
+    }
+    public void caclulate_minmax(){
+        this.Minx = Integer.MAX_VALUE;
+        this.Miny = Integer.MAX_VALUE;
+        this.Maxx = Integer.MIN_VALUE;
+        this.Maxy = Integer.MIN_VALUE;
+        Iterator<NodeData> iterator = this.best_algo.getGraph().nodeIter();
+        while(iterator.hasNext()) {
+            NodeData node = iterator.next();
+            if (node.getLocation().x()<this.Minx)this.Minx=node.getLocation().x();
+            if (node.getLocation().x()>this.Maxx)this.Maxx=node.getLocation().x();
+            if (node.getLocation().y()<this.Miny)this.Miny=node.getLocation().y();
+            if (node.getLocation().y()>this.Maxy)this.Maxy=node.getLocation().y();
+        }
+        this.Absx = Math.abs(this.Minx-this.Maxx);
+        this.Absy = Math.abs(this.Miny-this.Maxy);
+        this.scale_lon = ((this.mWin_w-100)/Absx);
+        this.scale_lat = ((this.mWin_h-100)/Absy);
+
+
     }
 }
