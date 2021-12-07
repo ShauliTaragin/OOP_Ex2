@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 
-public class Window extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
+public class Window extends JFrame implements ActionListener{
 
     public static void main(String[] args)
     {
@@ -31,29 +31,36 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Graph Algorithms");
         MenuBar menuBar = new MenuBar();
-        Menu menu = new Menu("Menu");
-        menuBar.add(menu);
+        Menu main_menu = new Menu("Menu");
+        Menu Help_menu = new Menu("Help");
+        menuBar.add(main_menu);
+        menuBar.add(Help_menu);
         this.setMenuBar(menuBar);
-        MenuItem item1 = new MenuItem("Load");
+        MenuItem item = new MenuItem("Load");
        // item1.addActionListener(this);
-
-        MenuItem item2 = new MenuItem("Save");
+        main_menu.add(item);
+        item = new MenuItem("Save");
        // item2.addActionListener(this);
-
-        MenuItem item3 = new MenuItem("Draw");
+        main_menu.add(item);
+        item = new MenuItem("Draw");
      //   item3.addActionListener(this);
-        MenuItem item3_1 =new MenuItem("Center");
-        item3_1.addActionListener(this);
+        main_menu.add(item);
+        item = new MenuItem("Exit");
+        //   item3.addActionListener(this);
+        main_menu.add(item);
 
-        menu.add(item1);
-        menu.add(item2);
-        menu.add(item3);
-        menu.add(item3_1);
+        main_menu.addSeparator();
+        ButtonGroup group = new ButtonGroup();
+        JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
+        rbMenuItem.setSelected(true);
+        rbMenuItem.setMnemonic(KeyEvent.VK_R);
+        group.add(rbMenuItem);
+
+
+
         JButton button = new JButton();
         JLabel label = new JLabel();
         label.setText("heelo");
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
         this.add(label);
     }
 
@@ -70,43 +77,6 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
 
         // "Switch" the old "canvas" for the new one
         g.drawImage(mBuffer_image, 0, 0, this);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        System.out.println("mouseClicked");
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        System.out.println("mouseEntered");
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        System.out.println("mouseExited");
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent mouseEvent) {
-
     }
 
     @Override
