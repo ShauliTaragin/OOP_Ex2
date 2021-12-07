@@ -73,7 +73,7 @@ class MyDWGAlgoTest {
 //        assertEquals(40 , best_algo_3.center().getKey());
 //        assertNull(best_algo_4.center());
            assertEquals(362, best_algo_5.center().getKey());
-//          assertEquals(3846,best_algo_6.center().getKey());
+          assertEquals(3846,best_algo_6.center().getKey());
 
     }
 
