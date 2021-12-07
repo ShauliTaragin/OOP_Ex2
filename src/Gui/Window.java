@@ -21,35 +21,88 @@ public class Window extends JFrame implements ActionListener{
     private int mWin_w = 500;
     private Image mBuffer_image;
     private Graphics mBuffer_graphics;
+    private JMenuBar menuBar;
+    private JMenu main_menu;
+    private JMenu Help_menu;
+    private JMenu editor;
+    private JMenu Algorithms;
+    private JMenuItem load,save;
+    private JMenuItem AddNode;
+    private JMenuItem RemoveNode;
+    private JMenuItem Connect;
+    private JMenuItem RemoveEdge;
+    private JMenuItem center;
+    private JMenuItem isConnected;
+    private JMenuItem tsp;
+    private JMenuItem shortestDist;
+    private JMenuItem shortestDistPath;
+    private JMenuItem exit;
+
+
+
 
     public Window() {
         initGUI();
     }
-
     private void initGUI() {
-        this.setSize(mWin_h, mWin_w);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Graph Algorithms");
-        MenuBar menuBar = new MenuBar();
-        Menu main_menu = new Menu("Menu");
-        Menu Help_menu = new Menu("Help");
-        menuBar.add(main_menu);
-        menuBar.add(Help_menu);
-        this.setMenuBar(menuBar);
-        MenuItem item = new MenuItem("Load");
-       // item1.addActionListener(this);
-        main_menu.add(item);
-        item = new MenuItem("Save");
-       // item2.addActionListener(this);
-        main_menu.add(item);
-        item = new MenuItem("Draw");
-     //   item3.addActionListener(this);
-        main_menu.add(item);
-        item = new MenuItem("Exit");
-        //   item3.addActionListener(this);
-        main_menu.add(item);
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize( size.width/2, size.height/2);
+        this.setVisible(true);
+        this.menuBar = new JMenuBar();
+        this.main_menu = new JMenu("Menu");
+        this.Help_menu = new JMenu("Help");
+        this.menuBar.add(this.main_menu);
+        this.menuBar.add(this.Help_menu);
+        this.setJMenuBar(this.menuBar);
+        this.load = new JMenuItem("Load");
+        this.load.addActionListener(this);
+        this.main_menu.add(this.load);
+        this.save = new JMenuItem("Save");
+        this.save.addActionListener(this);
+        this.main_menu.add(this.save);
+        this.editor = new JMenu("Edit Graph");
+        this.editor.addActionListener(this);
+        this.main_menu.add(this.editor);
+        this.AddNode= new JMenuItem("AddNode");
+        this.AddNode.addActionListener(this);
+        this.editor.add(this.AddNode);
+        this.RemoveNode= new JMenuItem("RemoveNode");
+        this.RemoveNode.addActionListener(this);
+        this.editor.add(this.RemoveNode);
+        this.Connect= new JMenuItem("Connect");
+        this.Connect.addActionListener(this);
+        this.editor.add(this.Connect);
+        this.RemoveEdge= new JMenuItem("RemoveEdge");
+        this.RemoveEdge.addActionListener(this);
+        this.editor.add(this.RemoveEdge);
 
-        main_menu.addSeparator();
+        this.Algorithms = new JMenu("Algorithms");
+        this.Algorithms.addActionListener(this);
+        this.main_menu.add(this.Algorithms);
+
+        this.center = new JMenuItem("Center");
+        this.center.addActionListener(this);
+        this.Algorithms.add(this.center);
+        this.isConnected= new JMenuItem("IsConnected");
+        this.isConnected.addActionListener(this);
+        this.Algorithms.add(this.isConnected);
+        this.tsp= new JMenuItem("TSP");
+        this.tsp.addActionListener(this);
+        this.Algorithms.add(this.tsp);
+        this.shortestDist= new JMenuItem("ShortestDist");
+        this.shortestDist.addActionListener(this);
+        this.Algorithms.add(this.shortestDist);
+        this.shortestDistPath= new JMenuItem("ShortestDistPath");
+        this.shortestDistPath.addActionListener(this);
+        this.Algorithms.add(this.shortestDistPath);
+
+        this.exit = new JMenuItem("Exit");
+        this.exit.addActionListener(this);
+        this.main_menu.add(this.exit);
+
+        this.main_menu.addSeparator();
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
         rbMenuItem.setSelected(true);
@@ -57,11 +110,10 @@ public class Window extends JFrame implements ActionListener{
         group.add(rbMenuItem);
 
 
-
         JButton button = new JButton();
         JLabel label = new JLabel();
-        label.setText("heelo");
-        this.add(label);
+    //    label.setText("heelo");
+    //    this.add(label);
     }
 
 
@@ -81,6 +133,6 @@ public class Window extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String actionevent = e.toString();
     }
 }
