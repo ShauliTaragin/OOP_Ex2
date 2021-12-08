@@ -155,11 +155,7 @@ public class Window extends JFrame implements ActionListener {
             double y1 = (best_algo.getGraph().getNode(edge.getSrc()).getLocation().y()-this.Miny)*this.scale_lat+60;
             double x2 =(best_algo.getGraph().getNode(edge.getDest()).getLocation().x()-this.Minx)*this.scale_lon+60;
             double y2 = (best_algo.getGraph().getNode(edge.getDest()).getLocation().y()-this.Miny)*this.scale_lat+60;
-           // g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
             drawArrowLine(g,(int)x1,(int)y1,(int)x2,(int)y2,10,5);
-            theta = Math.atan2(y2 - y1, x2 - x1);
-            //drawArrow(g, theta, x2, y2);
-            //arrHead (g,x1,y1,x2,y2);
         }
         for (MyNode node : best_algo.getMyGraph().getNodes().values()) {
             double x = (node.getNode().getLocation().x()-this.Minx)*(this.scale_lon)+60;
@@ -172,28 +168,6 @@ public class Window extends JFrame implements ActionListener {
             g.setFont( new Font(Font.DIALOG_INPUT, Font.BOLD| Font.PLAIN, 12));
             g.drawString(id , (int)x-kRADIUS,(int)y-kRADIUS);
         }
-
-//        if (mDraw_pivot
-//                && !mMoving_point) {
-//            g.setColor(Color.BLUE);
-//            g.fillOval((int) mPivot_point.x() - kRADIUS, (int) mPivot_point.y() - kRADIUS,
-//                    2 * kRADIUS, 2 * kRADIUS);
-//            if (prev != null) {
-//                g.setColor(Color.RED);
-//                g.drawLine((int) mPivot_point.x(), (int) mPivot_point.y(),
-//                        (int) prev.x(), (int) prev.y());
-//
-//
-//                float dist = (float)prev.distance3D(mPivot_point);
-//                float font_size = (float) Math.max(10.0f, Math.pow(dist,1.5f) / 100);
-//                font_size = Math.min(40.0f, font_size);
-//
-//                Font font = g.getFont().deriveFont(font_size);
-//                g.setFont(font);
-//                g.drawString(String.format("%.2f", dist), (int) ((mPivot_point.x() + prev.x()) / 2), (int) ((mPivot_point.y() + prev.y()) / 2));
-//            }
-//
-//        }
     }
     private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
         int dx = x2 - x1, dy = y2 - y1;
@@ -223,69 +197,12 @@ public class Window extends JFrame implements ActionListener {
         g.fillPolygon(xpoints, ypoints, 3);
 
     }
-//    public static final double angle = Math.PI/18;
-//    public static final double len = 17;
-//    private void arrHead (Graphics g,double x1, double y1, double x2, double y2)
-//    {
-//        double ax1,ay1, ax2, ay2;
-//        double c,a,beta,theta,phi;
-//        c = Math.sqrt ((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-//        if (Math.abs(x2-x1) < 1e-6)
-//            if (y2<y1) theta = Math.PI/2;
-//            else theta = - Math.PI/2;
-//        else
-//        { if (x2>x1)
-//            theta = Math.atan ((y1-y2)/(x2-x1)) ;
-//        else
-//            theta = Math.atan ((y1-y2)/(x1-x2));
-//        }
-//        a = Math.sqrt (len*len  + c*c - 2*len*c*Math.cos(angle));
-//        beta = Math.asin (len*Math.sin(angle)/a);
-//        phi = theta - beta;
-//        ay1 = y1 - a * Math.sin(phi);		// coordinates of arrowhead endpoint
-//        if (x2>x1)
-//            ax1 = x1 + a * Math.cos(phi);
-//        else
-//            ax1 = x1 - a * Math.cos(phi);
-//        phi = theta + beta;				// second arrowhead endpoint
-//        ay2 = y1 - a * Math.sin(phi);
-//        if (x2>x1)
-//            ax2 = x1 + a * Math.cos(phi);
-//        else
-//            ax2 = x1 - a * Math.cos(phi);
-//        g.setColor(Color.black);
-//        g.drawLine((int)x2,(int)y2,(int)ax1,(int) ay1);
-//        g.drawLine((int)x2,(int)y2,(int)ax2,(int) ay2);    }
-    private void drawArrow(Graphics g, double theta, double x0, double y0)
-    {
-        double barb =13;
-        double phi = Math.PI/7;
-        double x = x0 - barb * Math.cos(theta + phi);
-        double y = y0 - barb * Math.sin(theta + phi);
-        double x1,y1;
-        g.setColor(Color.black);
-        //g.drawLine((int) x0, (int)y0,(int) x, (int)y);
-        x1 = x0 - barb * Math.cos(theta - phi);
-        y1 = y0 - barb * Math.sin(theta - phi);
-        //g.drawLine((int)x0,(int) y0, (int)x, (int)y);
-        int[] xpoints = {
-                (int) x1,
-                (int) x0,
-                (int) x
-        };
-        int[] ypoints = {
-                (int)y1,
-                (int) y0,
-                (int) y
-        };
-        g.fillPolygon(xpoints,ypoints,3);
-    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         mBuffer_image = createImage(mWin_w, mWin_h);
         mBuffer_graphics = mBuffer_image.getGraphics();
         this.getGraphics().drawImage(mBuffer_image, 0, 0, this);
-
         Container container = getContentPane();
         getContentPane().removeAll();
         container.setLayout(new FlowLayout());
@@ -322,7 +239,7 @@ public class Window extends JFrame implements ActionListener {
                     text_geoloc.setPreferredSize(new Dimension(250, 40));
                     submit_button.addActionListener(new ActionListener() {
                         @Override
-                        public void actionPerformed(ActionEvent e) {
+                        public void actionPerformed(ActionEvent e)  {
                             try{
                                 String[] geoloc = text_geoloc.getText().split(",");
                                 int id = Integer.parseInt(text_id.getText());
@@ -333,6 +250,7 @@ public class Window extends JFrame implements ActionListener {
                             catch (Exception exception){
                                 JLabel label_error = new JLabel("Error. Enter correct id and geolocation");
                                 container.add(label_error);
+                                setVisible(true);
                             }
                         }
                     });
