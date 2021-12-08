@@ -155,10 +155,10 @@ public class Window extends JFrame implements ActionListener {
             double y1 = (best_algo.getGraph().getNode(edge.getSrc()).getLocation().y()-this.Miny)*this.scale_lat+60;
             double x2 =(best_algo.getGraph().getNode(edge.getDest()).getLocation().x()-this.Minx)*this.scale_lon+60;
             double y2 = (best_algo.getGraph().getNode(edge.getDest()).getLocation().y()-this.Miny)*this.scale_lat+60;
-            g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
-            //drawArrowLine(g,(int)x1,(int)y1,(int)x2,(int)y2,15,3);
+           // g.drawLine((int)x1,(int)y1,(int)x2,(int)y2);
+            drawArrowLine(g,(int)x1,(int)y1,(int)x2,(int)y2,10,5);
             theta = Math.atan2(y2 - y1, x2 - x1);
-            drawArrow(g, theta, x2, y2);
+            //drawArrow(g, theta, x2, y2);
             //arrHead (g,x1,y1,x2,y2);
         }
         for (MyNode node : best_algo.getMyGraph().getNodes().values()) {
@@ -166,7 +166,7 @@ public class Window extends JFrame implements ActionListener {
             double y = (node.getNode().getLocation().y()-this.Miny)*(this.scale_lat)+60;
 
             g.setColor(new Color(0,100,150));
-            g.fillOval((int) x-kRADIUS, (int) y-kRADIUS , 2 * kRADIUS, 2 * kRADIUS);
+            g.fillOval((int) x-kRADIUS, (int) y-kRADIUS , (int) (2 * kRADIUS), (int) (2 * kRADIUS));
         }
 
 //        if (mDraw_pivot
@@ -191,36 +191,34 @@ public class Window extends JFrame implements ActionListener {
 //
 //        }
     }
-//    private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
-//        int dx = x2 - x1, dy = y2 - y1;
-//        double D = Math.sqrt(dx * dx + dy * dy);
-//        double xm = D - d, xn = xm, ym = h, yn = -h, x;
-//        double sin = dy / D, cos = dx / D;
-//
-//        x = xm * cos - ym * sin + x1;
-//        ym = xm * sin + ym * cos + y1;
-//        xm = x;
-//
-//        x = xn * cos - yn * sin + x1;
-//        yn = xn * sin + yn * cos + y1;
-//        xn = x;
-//
-//        int[] xpoints = {
-//                x2,
-//                (int) xm,
-//                (int) xn
-//        };
-//        int[] ypoints = {
-//                y2,
-//                (int) ym,
-//                (int) yn
-//        };
-//        g.setColor(Color.YELLOW);
-//        g.drawLine(x1, y1, x2, y2);
-//        g.setColor(Color.black);
-//        g.fillPolygon(xpoints, ypoints, 3);
-//
-//    }
+    private void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
+        int dx = x2 - x1, dy = y2 - y1;
+        double D = Math.sqrt(dx * dx + dy * dy);
+        double xm = D - d, xn = xm, ym = h, yn = -h, x;
+        double sin = dy / D, cos = dx / D;
+
+        x = xm * cos - ym * sin + x1;
+        ym = xm * sin + ym * cos + y1;
+        xm = x;
+
+        x = xn * cos - yn * sin + x1;
+        yn = xn * sin + yn * cos + y1;
+        xn = x;
+
+        int[] xpoints = {
+                x2,
+                (int) xm,
+                (int) xn
+        };
+        int[] ypoints = {
+                y2,
+                (int) ym,
+                (int) yn
+        };
+        g.drawLine(x1, y1, x2, y2);
+        g.fillPolygon(xpoints, ypoints, 3);
+
+    }
 //    public static final double angle = Math.PI/18;
 //    public static final double len = 17;
 //    private void arrHead (Graphics g,double x1, double y1, double x2, double y2)
