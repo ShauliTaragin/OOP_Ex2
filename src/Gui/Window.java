@@ -64,25 +64,25 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.menuBar = new JMenuBar();
         this.main_menu = new JMenu("Menu");
         this.Help_menu = new JMenu("Help");
-        this.Help_menu.setIcon(new ImageIcon("src\\Gui\\help.png"));
+        this.Help_menu.setIcon(new ImageIcon("src/Gui/help.png"));
         this.clear = new JMenuItem("Clear Drawings");
         this.clear.addActionListener(this);
-        this.clear.setIcon(new ImageIcon("src\\Gui\\Eraser-icon.png"));
+        this.clear.setIcon(new ImageIcon("src/Gui/Eraser-icon.png"));
         this.menuBar.add(this.main_menu);
         this.menuBar.add(this.Help_menu);
         this.menuBar.add(this.clear);
         this.setJMenuBar(this.menuBar);
         this.load = new JMenuItem("Load");
-        this.load.setIcon(new ImageIcon(("src\\Gui\\load.png")));
+        this.load.setIcon(new ImageIcon(("src/Gui/load.png")));
         this.load.addActionListener(this);
         this.main_menu.add(this.load);
         this.save = new JMenuItem("Save");
-        this.save.setIcon(new ImageIcon(("src\\Gui\\save.png")));
+        this.save.setIcon(new ImageIcon(("src/Gui/save.png")));
         this.save.addActionListener(this);
         this.main_menu.add(this.save);
         this.editor = new JMenu("Edit Graph");
         this.editor.addActionListener(this);
-        this.editor.setIcon(new ImageIcon(("src\\Gui\\Pencil-icon.png")));
+        this.editor.setIcon(new ImageIcon(("src/Gui/Pencil-icon.png")));
         this.main_menu.add(this.editor);
         this.AddNode = new JMenuItem("AddNode");
         this.AddNode.addActionListener(this);
@@ -99,7 +99,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
 
         this.Algorithms = new JMenu("Algorithms");
         this.Algorithms.addActionListener(this);
-        this.Algorithms.setIcon(new ImageIcon(("src\\Gui\\graph-icon.png")));
+        this.Algorithms.setIcon(new ImageIcon(("src/Gui/graph-icon.png")));
         this.main_menu.add(this.Algorithms);
 
         this.center = new JMenuItem("Center");
@@ -283,6 +283,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     JButton submit_button = new JButton("Submit");
                     text_id.setPreferredSize(new Dimension(250, 40));
                     text_geoloc.setPreferredSize(new Dimension(250, 40));
+
                     submit_button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e)  {
@@ -370,8 +371,30 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(text_id_dst);
                     container.add(submit_button);
                     this.setVisible(true);
-                    break;
+
                 }
+                break;
+            case ("IsConnected"):
+                if (this.best_algo != null) {
+                    try {
+                        if(this.best_algo.isConnected()) {
+                            JFrame f=new JFrame();
+                            JOptionPane.showMessageDialog(f, "The graph is connected");
+                        }
+                        else{
+                            JFrame f=new JFrame();
+                            JOptionPane.showMessageDialog(f, "The graph is not connected");
+                        }
+                        this.setVisible(true);
+                        repaint();
+                    }
+                    catch (Exception exception){
+                        JFrame f=new JFrame();
+                        JOptionPane.showMessageDialog(f, "Error try again");
+                        this.setVisible(true);
+                    }
+                }
+                break;
             case ("Connect"):
                 if (this.best_algo != null) {
                     JLabel id_src = new JLabel("Enter id for src Node");
@@ -410,8 +433,8 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(text_weight);
                     container.add(submit_button);
                     this.setVisible(true);
-                    break;
                 }
+                break;
             case ("ShortestDist"):
                 if (this.best_algo != null) {
                     JLabel label_src = new JLabel("Enter id for source Node");
@@ -448,8 +471,8 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(text_dest);
                     container.add(submit_button);
                     this.setVisible(true);
-                    break;
                 }
+                break;
             case ("Center"):
                 if (this.best_algo != null) {
                     try {
@@ -457,14 +480,14 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                         show_graph(null, Double.MAX_VALUE, this.nodeKey);
                     } catch (Exception exception) {
                         JFrame f = new JFrame();
-                        JOptionPane.showMessageDialog(f, "Error, invalid arguments.\nEnter correct id and geo location");
+                        JOptionPane.showMessageDialog(f, "Error, there is no center!");
 //                                JLabel label_error = new JLabel("Error. Enter correct id and geolocation");
 //                                container.add(label_error);
                         this.setVisible(true);
                     }
                     this.setVisible(true);
-                    break;
                 }
+                break;
             case ("ShortestDistPath"):
                 if (this.best_algo != null) {
                     JLabel label_src = new JLabel("Enter id for source Node");
@@ -487,9 +510,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                             }
                             catch (Exception exception){
                                 JFrame f=new JFrame();
-                                JOptionPane.showMessageDialog(f,"Error, no path between source and dest.\nEnter correct src and dest");
-//                                JLabel label_error = new JLabel("Error, no path between source and dest.\n Enter correct src and dest");
-//                                container.add(label_error);
+                                JOptionPane.showMessageDialog(f,"Error, no path between source and dest.\nEnter correct src and dest");;
                                 setVisible(true);
                             }
                         }
@@ -500,8 +521,8 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(text_dest);
                     container.add(submit_button);
                     this.setVisible(true);
-                    break;
                 }
+                break;
             case ("TSP"):
                 if (this.best_algo != null) {
                     JLabel label_id = new JLabel("Enter Node id");
@@ -520,8 +541,6 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                             } catch (Exception exception) {
                                 JFrame f = new JFrame();
                                 JOptionPane.showMessageDialog(f, "Error, no path between source and dest.\nEnter correct src and dest");
-//                                JLabel label_error = new JLabel("Error, no path between source and dest.\n Enter correct src and dest");
-//                                container.add(label_error);
                                 setVisible(true);
                             }
                         }
@@ -547,8 +566,8 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(find_button);
                     container.add(add_button);
                     this.setVisible(true);
-                    break;
                 }
+                break;
         }
     }
     public void caclulate_minmax(){
