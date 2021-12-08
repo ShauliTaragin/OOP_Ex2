@@ -150,7 +150,7 @@ public class Window extends JFrame implements ActionListener {
         Iterator<EdgeData> edges =best_algo.getGraph().edgeIter();
         while(edges.hasNext()){
             EdgeData edge=edges.next();
-            g.setColor(Color.RED);
+            g.setColor(new Color(200,30,70));
             double x1 = (best_algo.getGraph().getNode(edge.getSrc()).getLocation().x()-this.Minx)*this.scale_lon+60;
             double y1 = (best_algo.getGraph().getNode(edge.getSrc()).getLocation().y()-this.Miny)*this.scale_lat+60;
             double x2 =(best_algo.getGraph().getNode(edge.getDest()).getLocation().x()-this.Minx)*this.scale_lon+60;
@@ -167,6 +167,10 @@ public class Window extends JFrame implements ActionListener {
 
             g.setColor(new Color(0,100,150));
             g.fillOval((int) x-kRADIUS, (int) y-kRADIUS , (int) (2 * kRADIUS), (int) (2 * kRADIUS));
+            String id = "" + node.getNode().getKey();
+            g.setColor(Color.BLACK);
+            g.setFont( new Font(Font.DIALOG_INPUT, Font.BOLD| Font.PLAIN, 12));
+            g.drawString(id , (int)x-kRADIUS,(int)y-kRADIUS);
         }
 
 //        if (mDraw_pivot
@@ -319,11 +323,17 @@ public class Window extends JFrame implements ActionListener {
                     submit_button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            String[] geoloc = text_geoloc.getText().split(",");
-                            int id = Integer.parseInt(text_id.getText());
-                            GeoL geoL = new GeoL(Double.parseDouble(geoloc[0]), Double.parseDouble(geoloc[1]), 0.0);
-                            best_algo.getGraph().addNode(new NodeD(id, geoL));
-                            show_graph();
+                            try{
+                                String[] geoloc = text_geoloc.getText().split(",");
+                                int id = Integer.parseInt(text_id.getText());
+                                GeoL geoL = new GeoL(Double.parseDouble(geoloc[0]), Double.parseDouble(geoloc[1]), 0.0);
+                                best_algo.getGraph().addNode(new NodeD(id, geoL));
+                                show_graph();
+                            }
+                            catch (Exception exception){
+                                JLabel label_error = new JLabel("Error. Enter correct id and geolocation");
+                                container.add(label_error);
+                            }
                         }
                     });
                     container.add(label_id);
