@@ -65,7 +65,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.main_menu = new JMenu("Menu");
         this.Help_menu = new JMenu("Help");
         this.Help_menu.setIcon(new ImageIcon("src\\Gui\\help.png"));
-        this.clear = new JMenuItem("Clear");
+        this.clear = new JMenuItem("Clear Drawings");
         this.clear.addActionListener(this);
         this.clear.setIcon(new ImageIcon("src\\Gui\\Eraser-icon.png"));
         this.menuBar.add(this.main_menu);
@@ -123,7 +123,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
 
         this.exit = new JMenuItem("Exit");
         this.exit.addActionListener(this);
-        this.exit.setIcon(new ImageIcon(("src\\Gui\\logout-icon.png")));
+        this.exit.setIcon(new ImageIcon(("src/Gui/logout-icon.png")));
         this.main_menu.add(this.exit);
         this.main_menu.addSeparator();
 
@@ -265,7 +265,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
 //                fileChooser.setCurrentDirectory(new File("./data"));
 //                int response = fileChooser.showSaveDialog(null);
                 break;
-            case ("Clear"):
+            case ("Clear Drawings"):
                 if (this.best_algo!=null) {
                     show_graph(null, this.dist , this.nodeKey);
                     this.setVisible(true);
@@ -306,6 +306,108 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(text_id);
                     container.add(label_geoloc);
                     container.add(text_geoloc);
+                    container.add(submit_button);
+                    this.setVisible(true);
+                    break;
+                }
+            case ("RemoveNode"):
+                if (this.best_algo != null) {
+                    JLabel label_id = new JLabel("Enter id for Node to remove");
+                    JTextField text_id = new JTextField();
+                    JButton submit_button = new JButton("Submit");
+                    text_id.setPreferredSize(new Dimension(250, 40));
+                    submit_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e)  {
+                            try{
+                                int id = Integer.parseInt(text_id.getText());
+                                best_algo.getGraph().removeNode(id);
+                                show_graph(null,Double.MAX_VALUE,Integer.MAX_VALUE);
+                            }
+                            catch (Exception exception){
+                                JFrame f=new JFrame();
+                                JOptionPane.showMessageDialog(f,"Error, invalid arguments.\nEnter correct id");
+//                                container.add(label_error);
+                                setVisible(true);
+                            }
+                        }
+                    });
+                    container.add(label_id);
+                    container.add(text_id);
+                    container.add(submit_button);
+                    this.setVisible(true);
+                    break;
+                }
+            case ("RemoveEdge"):
+                if (this.best_algo != null) {
+                    JLabel label_id = new JLabel("Enter id for src of Edge");
+                    JTextField text_id_src = new JTextField();
+                    JLabel label_geoloc = new JLabel("Enter id for dst of Edge");
+                    JTextField text_id_dst = new JTextField();
+                    JButton submit_button = new JButton("Submit");
+                    text_id_src.setPreferredSize(new Dimension(250, 40));
+                    text_id_dst.setPreferredSize(new Dimension(250, 40));
+                    submit_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e)  {
+                            try{
+                                int id_src = Integer.parseInt(text_id_src.getText());
+                                int id_dst = Integer.parseInt(text_id_dst.getText());
+                                best_algo.getGraph().removeEdge(id_src , id_dst);
+                                show_graph(null,Double.MAX_VALUE,Integer.MAX_VALUE);
+                            }
+                            catch (Exception exception){
+                                JFrame f=new JFrame();
+                                JOptionPane.showMessageDialog(f,"Error, invalid arguments.\nEnter correct id for src and dst");
+//                                container.add(label_error);
+                                setVisible(true);
+                            }
+                        }
+                    });
+                    container.add(label_id);
+                    container.add(text_id_src);
+                    container.add(label_geoloc);
+                    container.add(text_id_dst);
+                    container.add(submit_button);
+                    this.setVisible(true);
+                    break;
+                }
+            case ("Connect"):
+                if (this.best_algo != null) {
+                    JLabel id_src = new JLabel("Enter id for src Node");
+                    JTextField text_id_src = new JTextField();
+                    JLabel id_dst = new JLabel("Enter id for dst Node");
+                    JTextField text_id_dst = new JTextField();
+                    JLabel weight = new JLabel("Enter a positive weight for new edge");
+                    JTextField text_weight = new JTextField();
+                    JButton submit_button = new JButton("Submit");
+                    text_id_src.setPreferredSize(new Dimension(100, 20));
+                    text_id_dst.setPreferredSize(new Dimension(100, 20));
+                    text_weight.setPreferredSize(new Dimension(100, 20));
+                    submit_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e)  {
+                            try{
+                                int id_src = Integer.parseInt(text_id_src.getText());
+                                int id_dst = Integer.parseInt(text_id_dst.getText());
+                                double weight = Double.parseDouble(text_weight.getText());
+                                best_algo.getGraph().connect(id_src , id_dst , weight);
+                                show_graph(null,Double.MAX_VALUE,Integer.MAX_VALUE);
+                            }
+                            catch (Exception exception){
+                                JFrame f=new JFrame();
+                                JOptionPane.showMessageDialog(f,"Error, invalid arguments.\nEnter correct id for src and dst");
+//                                container.add(label_error);
+                                setVisible(true);
+                            }
+                        }
+                    });
+                    container.add(id_src);
+                    container.add(text_id_src);
+                    container.add(id_dst);
+                    container.add(text_id_dst);
+                    container.add(weight);
+                    container.add(text_weight);
                     container.add(submit_button);
                     this.setVisible(true);
                     break;
@@ -397,6 +499,53 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                     container.add(label_dest);
                     container.add(text_dest);
                     container.add(submit_button);
+                    this.setVisible(true);
+                    break;
+                }
+            case ("TSP"):
+                if (this.best_algo != null) {
+                    JLabel label_id = new JLabel("Enter Node id");
+                    JTextField text_id = new JTextField();
+                    JButton add_button = new JButton("ADD");
+                    text_id.setPreferredSize(new Dimension(250, 40));
+                    // text_dest.setPreferredSize(new Dimension(250, 40));
+                    ArrayList<NodeData> nodes=new ArrayList<>();
+                    add_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                int id = Integer.parseInt(text_id.getText());
+                                text_id.setText("");
+                                nodes.add(best_algo.getGraph().getNode(id));
+                            } catch (Exception exception) {
+                                JFrame f = new JFrame();
+                                JOptionPane.showMessageDialog(f, "Error, no path between source and dest.\nEnter correct src and dest");
+//                                JLabel label_error = new JLabel("Error, no path between source and dest.\n Enter correct src and dest");
+//                                container.add(label_error);
+                                setVisible(true);
+                            }
+                        }
+                    });
+                    this.path=nodes;
+                    ArrayList<NodeData> nodes1=this.path;
+                    JButton find_button = new JButton("Find tsp");
+                    find_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                show_graph((ArrayList<NodeData>) best_algo.tsp(nodes1),Double.MAX_VALUE,Integer.MAX_VALUE);
+                            }
+                            catch (Exception exception) {
+                                JFrame f = new JFrame();
+                                JOptionPane.showMessageDialog(f, "Error, no path between source and dest.\nEnter correct src and dest");
+                                setVisible(true);
+                            }
+                        }
+                    });
+                    container.add(label_id);
+                    container.add(text_id);
+                    container.add(find_button);
+                    container.add(add_button);
                     this.setVisible(true);
                     break;
                 }
