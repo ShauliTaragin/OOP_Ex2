@@ -103,3 +103,39 @@ Pressing on each node will show each node's geolocation. To unshow the location 
 * Clear button clears the drawings on top of the loaded graph. i.e geolocation , shortestdist, center etc..
 
 ![Screenshot](graph_draw.png)
+
+---------
+
+
+## Languages and Tools
+
+  <div align="center">
+
+<code><img height="40" width="40" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"></code>
+<code><img height="40" height="40" src="https://jupyter.org/assets/main-logo.svg"/></code>
+<code><img height="40" width="80" src="https://pandas.pydata.org/static/img/pandas_white.svg"/></code>
+<code><img height="40" width="70" src="https://upload.wikimedia.org/wikipedia/commons/d/d5/UML_logo.svg"/></code>
+<code><img height="40" width="40" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/PyCharm_Icon.svg/1024px-PyCharm_Icon.svg.png"/></code>
+<code><img height="40" height="40" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png"></code>
+<code><img height="40" height="40" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/terminal/terminal.png"></code>
+  </div>
+
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [Python](https://en.wikipedia.org/wiki/Java_(programming_language))
+* [UML](https://en.wikipedia.org/wiki/Unified_Modeling_Language)
+* [Git](https://git-scm.com/)
+* [Jupyter](https://jupyter.org/)
+* [Pandas](https://pandas.pydata.org/)
+* [Git-scm](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+
+<!-- CONTACT -->
+## Contact
+
+Ido - [here](https://github.com/idobar1403/)
+
+Shauli - [here](https://github.com/ShauliTaragin/)
+
+Project Link: [here](https://github.com/ShauliTaragin/OOP_Ex2)
