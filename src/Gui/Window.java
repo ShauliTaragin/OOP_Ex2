@@ -1,5 +1,6 @@
 package Gui;
 
+import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import implementaions.*;
@@ -14,10 +15,10 @@ import javax.swing.*;
 
 public class Window extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
 
-    public static void main(String[] args) {
-        Window window = new Window();
-        window.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        Window window = new Window();
+//        window.setVisible(true);
+//    }
 
     boolean mDraw_pivot = false;
     boolean mMoving_point = false;
@@ -49,18 +50,18 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
     public ArrayList<NodeData> path;
     public Double dist;
     public int nodeKey;
-    public Window() {
-        initGUI();
+    public Window(DirectedWeightedGraphAlgorithms algo) {
+        initGUI(algo);
     }
-
-    private void initGUI() {
+    private void initGUI(DirectedWeightedGraphAlgorithms algo) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Graph Algorithms");
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         this.mWin_w= (int)(size.width/1.5);
         this.mWin_h= (int)(size.height/1.2);
         this.setSize(this.mWin_w,this.mWin_h);
-        this.setVisible(true);
+        this.best_algo= (MyDWGAlgo) algo;
+        caclulate_minmax();
         this.menuBar = new JMenuBar();
         this.main_menu = new JMenu("Menu");
         this.Help_menu = new JMenu("Help");
@@ -97,12 +98,10 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.RemoveEdge = new JMenuItem("RemoveEdge");
         this.RemoveEdge.addActionListener(this);
         this.editor.add(this.RemoveEdge);
-
         this.Algorithms = new JMenu("Algorithms");
         this.Algorithms.addActionListener(this);
         this.Algorithms.setIcon(new ImageIcon(("src/Gui/graph-icon.png")));
         this.main_menu.add(this.Algorithms);
-
         this.center = new JMenuItem("Center");
         this.center.addActionListener(this);
         this.Algorithms.add(this.center);
@@ -121,7 +120,6 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.path=null;
         this.dist=Double.MAX_VALUE;
         this.nodeKey= Integer.MAX_VALUE;
-
         this.exit = new JMenuItem("Exit");
         this.exit.addActionListener(this);
         this.exit.setIcon(new ImageIcon(("src/Gui/logout-icon.png")));
@@ -134,6 +132,8 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         group.add(rbMenuItem);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
+        setVisible(true);
+        repaint();
     }
 
 
@@ -261,12 +261,19 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
             case ("Load"):
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File("./data"));
-                int response = fileChooser.showOpenDialog(null);
-                if (response == JFileChooser.APPROVE_OPTION) {
-                    File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                    this.best_algo = new MyDWGAlgo(file.toString());
-                    caclulate_minmax();
-                    repaint();
+                try {
+                    int response = fileChooser.showOpenDialog(null);
+                    if (response == JFileChooser.APPROVE_OPTION) {
+                        File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                        this.best_algo = new MyDWGAlgo(file.toString());
+                        caclulate_minmax();
+                        repaint();
+                    }
+                }
+                catch (Exception exception){
+                    JFrame f=new JFrame();
+                    JOptionPane.showMessageDialog(f,"Error, not json file");
+                    setVisible(true);
                 }
                 break;
             case ("Save"):
