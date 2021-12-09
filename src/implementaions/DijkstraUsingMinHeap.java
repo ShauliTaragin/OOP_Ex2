@@ -18,7 +18,7 @@ public class DijkstraUsingMinHeap {
             this.max=0.0;
             this.graph = (MyDWG) newGraph.copy();
         }
-        public void dijkstra_GetMinDistances(int sourceVertex) {
+        public void dijkstra_GetMinDistances(int sourceVertex,int dest) {
             int index=0;
             this.max=0.0;
             double INFINITY = Double.MAX_VALUE;
@@ -55,6 +55,9 @@ public class DijkstraUsingMinHeap {
                     //extracted vertex
                     int extractedNodeKey = extractedNode.getNode().getKey();
                     extracted[extractedNodeKey] = true;
+                    if(extractedNodeKey==dest){
+                        return;
+                    }
                     //iterate through all the adjacent vertices
                     Iterator<EdgeData> edges = this.graph.edgeIter(extractedNodeKey);
                     while (edges.hasNext()) {

@@ -78,7 +78,7 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     @Override
     public double shortestPathDist(int src, int dest) {
         DijkstraUsingMinHeap.Graph g=new DijkstraUsingMinHeap.Graph(this.graph);
-        g.dijkstra_GetMinDistances(src);
+        g.dijkstra_GetMinDistances(src,dest);
         return g.heapNodes[dest];
     }
 
@@ -95,7 +95,7 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     @Override
     public List<NodeData> shortestPath(int src, int dest){
         DijkstraUsingMinHeap.Graph g=new DijkstraUsingMinHeap.Graph(this.graph);
-        g.dijkstra_GetMinDistances(src);
+        g.dijkstra_GetMinDistances(src,dest);
         ArrayList<NodeData> nodes =new ArrayList<>();
         int key=dest;
         while(key!=src) {
@@ -122,7 +122,7 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
         Iterator<NodeData> iterator =this.getGraph().nodeIter();
         while(iterator.hasNext()) {
             NodeData node=iterator.next();
-            g.dijkstra_GetMinDistances(node.getKey());
+            g.dijkstra_GetMinDistances(node.getKey(),Integer.MAX_VALUE);
             if(g.max < min){
                 min = g.max;
                 key_holder = node.getKey();
@@ -158,7 +158,7 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
             while (!holdCities.isEmpty()) {
                 double minDist = Double.MAX_VALUE;
                 for (int i = 0; i < holdCities.size(); i++) {
-                    if(this.graph.getMyNode(src).getConnectedTo().containsKey(holdCities.get(i).getKey())){
+                    if(this.graph.getMyNode(src).getConnectedTo().get(holdCities.get(i).getKey())!=null){
                         ans=this.graph.getMyNode(src).getConnectedTo().get(holdCities.get(i).getKey()).getWeight();
                     }
                     else {
