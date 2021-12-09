@@ -34,8 +34,8 @@ class MyDWGAlgoTest {
     @Test
     void copy() {
         assertTrue(this.best_algo_1.copy().getNode(0).equals(this.best_algo_1.getGraph().getNode(0)));
-        assertTrue(this.best_algo_1.copy().getNode(0)==(this.best_algo_1.getGraph().getNode(0)));
-        assertTrue(this.best_algo_1.copy().getMC()==(this.best_algo_1.getGraph().getMC()));
+        assertTrue(this.best_algo_1.copy().getNode(0) == (this.best_algo_1.getGraph().getNode(0)));
+        assertTrue(this.best_algo_1.copy().getMC() == (this.best_algo_1.getGraph().getMC()));
     }
 
     @Test
@@ -44,13 +44,17 @@ class MyDWGAlgoTest {
         assertFalse(best_algo_4.isConnected());
         assertTrue(best_algo_5.isConnected());
         assertTrue(best_algo_6.isConnected());
-
+        assertTrue(best_algo_2.isConnected());
     }
 
     @Test
     void shortestPathDist() {
         assertEquals(1.232037506070033, best_algo_4.shortestPathDist(0, 1));
         assertEquals(4.418137984092362, best_algo_4.shortestPathDist(7, 1));
+        assertEquals(305.79893747273826, best_algo_5.shortestPathDist(0, 400));
+        assertEquals(1.7976931348623157E308, best_algo_5.shortestPathDist(0, 5673));
+        assertEquals(816.1427454532326, best_algo_6.shortestPathDist(0, 5673));
+        assertEquals(1.7976931348623157E308, best_algo_6.shortestPathDist(0, 56736));
     }
 
     @Test
@@ -68,25 +72,35 @@ class MyDWGAlgoTest {
 
     @Test
     void center() {
-        assertEquals(8 , best_algo_1.center().getKey());
+        assertEquals(8, best_algo_1.center().getKey());
 //        assertEquals(0 , best_algo_2.center().getKey());
 //        assertEquals(40 , best_algo_3.center().getKey());
 //        assertNull(best_algo_4.center());
-         //  assertEquals(362, best_algo_5.center().getKey());
-        //  assertEquals(3846,best_algo_6.center().getKey());
+        //  assertEquals(362, best_algo_5.center().getKey());
+        assertEquals(3846, best_algo_6.center().getKey());
 
     }
 
     @Test
     void tsp() {
-        List<NodeData> cities = new ArrayList<>();
-        for (int i = 0; i <30 ; i++) {
+            List<NodeData> cities = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
             cities.add(best_algo_5.getGraph().getNode(i));
         }
-        List<NodeData> ans = best_algo_5.tsp(cities);
+          List<NodeData> ans = best_algo_5.tsp(cities);
         for (int i = 0; i < ans.size(); i++) {
-            System.out.println(ans.get(i).getKey());
+//            System.out.println(ans.get(i).getKey());
         }
+        for (int i = 0; i < 2; i++) {
+            cities.add(best_algo_6.getGraph().getNode(i));
+        }
+        ans = best_algo_6.tsp(cities);
+        for (int i = 0; i < ans.size(); i++) {
+//            System.out.println(ans.get(i).getKey());
+        }
+        assertEquals(3990 , ans.get(0).getKey());
+        assertEquals(190 , ans.get(1).getKey());
+        assertEquals(0 , ans.get(2).getKey());
     }
 
     @Test
