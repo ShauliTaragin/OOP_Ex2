@@ -68,6 +68,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.clear = new JMenuItem("Clear Drawings");
         this.clear.addActionListener(this);
         this.clear.setIcon(new ImageIcon("src/Gui/Eraser-icon.png"));
+        this.main_menu.setIcon(new ImageIcon("src/Gui/Menu.png"));
         this.menuBar.add(this.main_menu);
         this.menuBar.add(this.Help_menu);
         this.menuBar.add(this.clear);
