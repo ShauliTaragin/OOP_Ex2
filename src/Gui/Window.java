@@ -273,6 +273,32 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
 //                JFileChooser fileChooser = new JFileChooser();
 //                fileChooser.setCurrentDirectory(new File("./data"));
 //                int response = fileChooser.showSaveDialog(null);
+                if (this.best_algo != null) {
+                    JLabel label_name = new JLabel("Enter name for the file with .json at the end");
+                    JTextField text_name = new JTextField();
+                    JButton submit_button = new JButton("Submit");
+                    text_name.setPreferredSize(new Dimension(250, 40));
+                    submit_button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e)  {
+                            try{
+                                String fileName = text_name.getText();
+                                best_algo.save(fileName);
+                                show_graph(null,Double.MAX_VALUE,Integer.MAX_VALUE);
+                            }
+                            catch (Exception exception){
+                                JFrame f=new JFrame();
+                                JOptionPane.showMessageDialog(f,"Error, can't save");
+                                setVisible(true);
+                            }
+                        }
+                    });
+                    container.add(label_name);
+                    container.add(text_name);
+                    container.add(submit_button);
+                    this.setVisible(true);
+                    break;
+                }
                 break;
             case ("Clear Drawings"):
                 if (this.best_algo!=null) {
