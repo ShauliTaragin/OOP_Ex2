@@ -182,7 +182,7 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                 double y2 = (this.path.get(i+1).getLocation().y()-this.Miny)*this.scale_lat+60;
                 EdgeData edge = best_algo.getMyGraph().getEdge(this.path.get(i).getKey(),this.path.get(i+1).getKey());
                 g2d.setStroke(new BasicStroke(3));
-                drawArrowLine(g2d,(int)x1,(int)y1,(int)x2,(int)y2,8,6);
+                drawArrowLine(g2d,(int)x1,(int)y1,(int)x2,(int)y2,7,7);
                 g.fillOval((int) x1-kRADIUS, (int) y1-kRADIUS , (int) (2 * kRADIUS), (int) (2 * kRADIUS));
                 g.setColor(new Color(50,200,70));
 
@@ -234,6 +234,8 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         };
         g.drawLine(x1, y1, (int)newX2, (int)newY2);
         g.setFont( new Font(Font.DIALOG_INPUT, Font.BOLD, 12));
+//        g.drawLine((int)newX2,(int)newY2,(int) xm1,(int) ym1);
+//        g.drawLine((int)newX2,(int)newY2,(int) xn1,(int) yn1);
         g.fillPolygon(xpoints, ypoints, 3);
     }
 

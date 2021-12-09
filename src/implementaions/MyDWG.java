@@ -207,8 +207,31 @@ public class MyDWG implements api.DirectedWeightedGraph {
         for (Integer key : nodes.keySet()) {
             newHashMap.put(key, this.nodes.get(key).getNode());
         }
-        Iterator<NodeData> nodeDIterator = newHashMap.values().iterator();//need to test this
-        return nodeDIterator;
+        HashMap<Integer,NodeData> copiedNodes= (HashMap<Integer, NodeData>) newHashMap.clone();
+        Iterator<NodeData> clonedIterator=copiedNodes.values().iterator();
+        Iterator<NodeData> emptyIterator=new Iterator<NodeData>() {
+            @Override
+            public boolean hasNext() {
+                return clonedIterator.hasNext();
+            }
+
+            @Override
+            public NodeData next() {
+                if(nodeIter==mc){
+                    return clonedIterator.next();
+                }
+                else{
+                    Exception e=new RuntimeException();
+                    try {
+                        throw e;
+                    } catch (Exception  RTE) {
+                        System.out.println("Cant change the graph during the iterator running");
+                    }
+                }
+                throw  new RuntimeException();
+            }
+        };
+        return emptyIterator;
     }
 
     /**
@@ -226,10 +249,31 @@ public class MyDWG implements api.DirectedWeightedGraph {
                 all_edges_in_graph.add(this.nodes.get(key).getConnectedTo().get(key2));
             }
         }
+        ArrayList <EdgeData> copy= (ArrayList<EdgeData>) all_edges_in_graph.clone();
         Iterator<EdgeData> edgeDIterator = all_edges_in_graph.iterator();
-        return edgeDIterator;
+        Iterator<EdgeData> emptyIterator=new Iterator<EdgeData>() {
+            @Override
+            public boolean hasNext() {
+                return edgeDIterator.hasNext();
+            }
+            @Override
+            public EdgeData next() {
+                if(edgeIter==mc){
+                    return edgeDIterator.next();
+                }
+                else{
+                    Exception e=new RuntimeException();
+                    try {
+                        throw e;
+                    } catch (Exception  RTE) {
+                        System.out.println("Cant change the graph during the iterator running");
+                    }
+                }
+                throw new RuntimeException();
+            }
+        };
+        return emptyIterator;
     }
-
     /**
      * This method returns an Iterator for edges getting out of the given node (all the edges starting (source) at the given node).
      * Note: if the graph was changed since the iterator was constructed - a RuntimeException should be thrown.
@@ -244,10 +288,31 @@ public class MyDWG implements api.DirectedWeightedGraph {
         for (Integer key : this.nodes.get(node_id).getConnectedTo().keySet()) {
             newHashMap.put(key, this.nodes.get(node_id).getConnectedTo().get(key));
         }
-        Iterator<EdgeData> iterator = newHashMap.values().iterator();//need to test this
-        return iterator;
+        HashMap<Integer,EdgeData> copyHashMap= (HashMap<Integer, EdgeData>) newHashMap.clone();
+        Iterator<EdgeData> iterator = copyHashMap.values().iterator();//need to test this
+        Iterator<EdgeData> emptyIterator=new Iterator<EdgeData>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+            @Override
+            public EdgeData next() {
+                if(edgeNodeIter==mc){
+                    return iterator.next();
+                }
+                else{
+                    Exception e=new RuntimeException();
+                    try {
+                        throw e;
+                    } catch (Exception  RTE) {
+                        System.out.println("Cant change the graph during the iterator running");
+                    }
+                }
+                throw new RuntimeException();
+            }
+        };
+        return emptyIterator;
     }
-
     /**
      * Deletes the node (with the given ID) from the graph -
      * and removes all edges which starts or ends at this node.
