@@ -1,11 +1,17 @@
 package implementaions;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import api.DirectedWeightedGraph;
+import api.EdgeData;
 import api.NodeData;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
     private MyDWG graph;
@@ -230,7 +236,39 @@ public class MyDWGAlgo implements api.DirectedWeightedGraphAlgorithms{
      */
     @Override
     public boolean save(String file) {
-        return false;
+        JSONArray jsonArray=new JSONArray();
+        JSONObject jsonObject=new JSONObject();
+        Iterator<EdgeData> iterator=this.graph.edgeIter();
+        Map<String, Object> customer ;
+        try {
+        while(iterator.hasNext()){
+            customer =new HashMap<>();
+            EdgeData edge= iterator.next();
+            customer.put("src", edge.getSrc());
+            customer.put("w", edge.getWeight());
+            customer.put("dest", edge.getDest());
+            jsonArray.add(customer);
+        }
+        jsonObject.put("Edges",jsonArray);
+        jsonArray=new JSONArray();
+        Iterator<NodeData> nodes=this.graph.nodeIter();
+        while(nodes.hasNext()){
+            NodeData node= nodes.next();
+            customer =new HashMap<>();
+            customer.put("pos",node.getLocation().x()+","+node.getLocation().y()+","+node.getLocation().z());
+            customer.put("id",node.getKey());
+            jsonArray.add(customer);
+        }
+            jsonObject.put("Nodes",jsonArray);
+            PrintWriter pw = new PrintWriter("data/"+file);
+            pw.write(jsonObject.toJSONString());
+            pw.flush();
+            pw.close();
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
     /**
      * This method loads a graph to this graph algorithm.
