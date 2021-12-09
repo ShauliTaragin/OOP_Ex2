@@ -2,8 +2,6 @@ package implementaions;
 
 import api.EdgeData;
 import api.NodeData;
-
-import java.util.HashMap;
 import java.util.Iterator;
 
 public class DijkstraUsingMinHeap {
@@ -71,11 +69,13 @@ public class DijkstraUsingMinHeap {
                             if (currentDest > newDest) {
                                 decreaseKey(minHeap, newDest, destination);
                                 this.heapNodes[destination]=newDest;
+                                //switch the previous parent of the destination
                                 this.parents[destination]=extractedNodeKey;
                             }
                         }
                     }
                 }
+                // the last Node to be extracted is the one with the biggest weight
                 this.max =minHeap.nodeHolder[0].getNode().getWeight();
             }
             catch (Exception e){
@@ -89,19 +89,23 @@ public class DijkstraUsingMinHeap {
             //get the node and update its value
             MyNode node = minHeap.nodeHolder[index];
             node.getNode().setWeight(newKey);
-            minHeap.bubbleUp(index);
+            minHeap.heapfyUp(index);
         }
     }
+    //minheap class
     static class MinHeap{
+        //number of nodes in the heap
         int numOfNodes;
+        // the current nodes in the heap
         int currentHeapSize;
+        // the array that holds the nodes for the heap
         MyNode[] nodeHolder;
         int [] indexOfNodes; //will be used to decrease the distance
         public MinHeap(int capacity, int key, MyDWG graph,int size) {
             this.numOfNodes = capacity;
             this.nodeHolder = new MyNode[capacity];
             this.indexOfNodes = new int[size];
-            //init the src as the min node in the heap
+            //init the src as the min node in the heap with weight 0
             this.nodeHolder[0] = (graph.getMyNode(key));
             this.nodeHolder[0].getNode().setWeight(0.0);
             this.currentHeapSize = 0;
@@ -113,10 +117,11 @@ public class DijkstraUsingMinHeap {
             this.nodeHolder[idx] = x;
             this.nodeHolder[idx].getNode().setWeight(Double.MAX_VALUE);
             this.indexOfNodes[x.getNode().getKey()] = idx;
-            bubbleUp(idx);
+            // put the node at the current index at his place in the heap
+            heapfyUp(idx);
         }
-        //
-        public void bubbleUp(int pos) {
+        // simple heapfyUp
+        public void heapfyUp(int pos) {
             int parentIdx = pos/2;
             int currentIdx = pos;
             while (currentIdx > 0 && this.nodeHolder[parentIdx].getNode().getWeight() > this.nodeHolder[currentIdx].getNode().getWeight()) {
@@ -130,6 +135,7 @@ public class DijkstraUsingMinHeap {
                 parentIdx = parentIdx/2;
             }
         }
+        // get the node with the minimum weight
         public MyNode extractMin() {
             MyNode min = this.nodeHolder[0];
             MyNode lastNode = this.nodeHolder[this.currentHeapSize];
@@ -141,7 +147,7 @@ public class DijkstraUsingMinHeap {
             this.currentHeapSize--;
             return min;
         }
-
+        // push the node at the current index down
         public void sinkDown(int k) {
             int smallest = k;
             int leftChildIdx = 2 * k;

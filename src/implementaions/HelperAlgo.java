@@ -8,43 +8,47 @@ public class HelperAlgo {
     public static boolean findPath(List<NodeData> nodes,MyDWG graph){
         MyDWGAlgo copy_graph=new MyDWGAlgo();
         boolean flag1 = true;
-        copy_graph.init(graph);
-        List<Integer>keys=new ArrayList<>();
-        Iterator<NodeData> nodeIter = graph.nodeIter();
-        while(nodeIter.hasNext()) {
-            keys.add(nodeIter.next().getKey());
-        }
-        boolean src_node=false;
-        int src_node_key=0;
-        Iterator<NodeData> nodeiter2=copy_graph.getGraph().nodeIter();
-        while(nodeiter2.hasNext()&&flag1) {
-            //int key=nodeiter2.next().getKey();
-            NodeData key = nodeiter2.next();
-            if(nodes.contains(key)) {
-                src_node_key=key.getKey();
-                src_node=true;
+        try {
+            copy_graph.init(graph);
+            List<Integer> keys = new ArrayList<>();
+            Iterator<NodeData> nodeIter = graph.nodeIter();
+            while (nodeIter.hasNext()) {
+                keys.add(nodeIter.next().getKey());
             }
-            flag1=false;
-        }
-        if(src_node==true) { // now we check if there is a path between src
-            copy_graph.isConnected();
-            flag1=true;
-            for (Integer key : keys) {
-                if(key!=src_node_key&& graph.getNode(key).getTag()!=1&& nodes.contains(key)) {
+            boolean src_node = false;
+            int src_node_key = 0;
+            Iterator<NodeData> nodeiter2 = copy_graph.getGraph().nodeIter();
+            while (nodeiter2.hasNext() && flag1) {
+                //int key=nodeiter2.next().getKey();
+                NodeData key = nodeiter2.next();
+                if (nodes.contains(key)) {
+                    src_node_key = key.getKey();
+                    src_node = true;
+                }
+                flag1 = false;
+            }
+            if (src_node == true) { // now we check if there is a path between src
+                copy_graph.isConnected();
+                flag1 = true;
+                for (Integer key : keys) {
+                    if (key != src_node_key && graph.getNode(key).getTag() != 1 && nodes.contains(key)) {
                         return false;
+                    }
                 }
             }
-        }
-        copy_graph.isConnected();
-        for (int i = 0; i <keys.size() ; i++) {
-            Integer key_currnet = keys.get(i);
-            if( key_currnet!=src_node_key&& nodes.contains(key_currnet)&& graph.getNode(key_currnet).getTag()!=1) {
+            copy_graph.isConnected();
+            for (int i = 0; i < keys.size(); i++) {
+                Integer key_currnet = keys.get(i);
+                if (key_currnet != src_node_key && nodes.contains(key_currnet) && graph.getNode(key_currnet).getTag() != 1) {
                     return false;
+                }
             }
+            return true;
         }
-        return true;
+        catch (Exception e){
+            return false;
+        }
     }
-
     /**
      * regular dfs using tag of each node to mark whether the node as been visited or not
      * @param graph
