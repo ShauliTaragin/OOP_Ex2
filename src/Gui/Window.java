@@ -185,9 +185,15 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
                 g2d.setStroke(new BasicStroke(3));
                 drawArrowLine(g2d,(int)x1,(int)y1,(int)x2,(int)y2,7,7);
                 g.fillOval((int) x1-kRADIUS, (int) y1-kRADIUS , (int) (2 * kRADIUS), (int) (2 * kRADIUS));
-                g.setColor(new Color(50,200,70));
-
             }
+            g.setColor(Color.ORANGE);
+            double x1 = (this.path.get(0).getLocation().x()-this.Minx)*this.scale_lon+60;
+            double y1 = (this.path.get(0).getLocation().y()-this.Miny)*this.scale_lat+60;
+            g.fillOval((int) (x1-1.5*kRADIUS), (int) (y1-1.5*kRADIUS), (int) (3 * kRADIUS), (int) (3 * kRADIUS));
+            g.setColor(new Color(50,200,70));
+            double x2 =(this.path.get(this.path.size()-1).getLocation().x()-this.Minx)*this.scale_lon+60;
+            double y2 = (this.path.get(this.path.size()-1).getLocation().y()-this.Miny)*this.scale_lat+60;
+            g.fillOval((int) (x2-1.5*kRADIUS), (int) (y2-1.5*kRADIUS) , (int) (3 * kRADIUS), (int) (3 * kRADIUS));
         }
         if(this.nodeKey!=Integer.MAX_VALUE){
             double x1 = (this.best_algo.getGraph().getNode(this.nodeKey).getLocation().x()-this.Minx)*this.scale_lon+60;
