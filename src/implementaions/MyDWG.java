@@ -2,19 +2,16 @@ package implementaions;
 
 import api.EdgeData;
 import api.NodeData;
-
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.internal.LinkedTreeMap;
-import org.w3c.dom.Node;
 
 public class MyDWG implements api.DirectedWeightedGraph {
     private HashMap<Integer, MyNode> nodes;
@@ -25,17 +22,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
     private int edgeNodeIter;
 
     public MyDWG() {
-        this.nodes = new HashMap<Integer, MyNode>();
-        this.numOfEdge = 0;
-        this.mc = 0;
-        this.nodeIter = 0;
-        this.edgeIter = 0;
-        this.edgeNodeIter = 0;
-
-    }
-
-    public MyDWG(HashMap<Integer, MyNode> nodes1) {
-        this.nodes = nodes1;
+        this.nodes = new HashMap<>();
         this.numOfEdge = 0;
         this.mc = 0;
         this.nodeIter = 0;
@@ -60,7 +47,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
      * @param json
      */
     public MyDWG(String json) {
-        this.nodes = new HashMap<Integer , MyNode>();
+        this.nodes = new HashMap<>();
         this.numOfEdge = 0;
         this.mc = 0;
         this.nodeIter = 0;
@@ -166,8 +153,13 @@ public class MyDWG implements api.DirectedWeightedGraph {
      */
     @Override
     public void addNode(NodeData n) {
-        this.nodes.put(n.getKey(), new MyNode(n));
-        this.mc++;
+        try {
+            this.nodes.put(n.getKey(), new MyNode(n));
+            this.mc++;
+        }
+        catch (Exception e){
+            return;
+        }
     }
 
     /**
@@ -180,17 +172,22 @@ public class MyDWG implements api.DirectedWeightedGraph {
      */
     @Override
     public void connect(int src, int dest, double w) {
-        if (this.nodes.get(src).getConnectedTo().containsKey(dest)) {
-            // will change if make changes with tag or info
-            this.nodes.get(src).getConnectedTo().replace(dest, new EdgeD(src, dest, w));
-            this.nodes.get(dest).getConnectedFrom().replace(src, w);
-        } else {
-            EdgeD edge = new EdgeD(src, dest, w);
-            this.nodes.get(src).AddConnectedTo(edge);
-            this.nodes.get(dest).AddConnectedFrom(src, w);
-            this.numOfEdge++;
+        try {
+            if (this.nodes.get(src).getConnectedTo().containsKey(dest)) {
+                // will change if make changes with tag or info
+                this.nodes.get(src).getConnectedTo().replace(dest, new EdgeD(src, dest, w));
+                this.nodes.get(dest).getConnectedFrom().replace(src, w);
+            } else {
+                EdgeD edge = new EdgeD(src, dest, w);
+                this.nodes.get(src).AddConnectedTo(edge);
+                this.nodes.get(dest).AddConnectedFrom(src, w);
+                this.numOfEdge++;
+            }
+            this.mc++;
         }
-        this.mc++;
+        catch (Exception e){
+            return;
+        }
     }
 
     /**
@@ -203,7 +200,7 @@ public class MyDWG implements api.DirectedWeightedGraph {
     @Override
     public Iterator<NodeData> nodeIter() throws RuntimeException {
         this.nodeIter = mc;//when we implement the main funciton we will check if nodeIter changed from mc and if so we need to throw a runtime exception
-        HashMap<Integer, NodeData> newHashMap = new HashMap<Integer, NodeData>();
+        HashMap<Integer, NodeData> newHashMap = new HashMap<>();
         for (Integer key : nodes.keySet()) {
             newHashMap.put(key, this.nodes.get(key).getNode());
         }

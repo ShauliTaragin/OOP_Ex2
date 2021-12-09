@@ -13,15 +13,13 @@ public class MyNode implements Comparator<MyNode> {
 
     public MyNode(NodeData node, HashMap<Integer, EdgeData> ConnectedTo, HashMap<Integer,Double> ConnectedFrom){
         this.node=node;
-        this.ConnectedTo= new HashMap<Integer,EdgeData>();
-        this.ConnectedFrom= new HashMap<Integer,Double>();
-    }
-    public MyNode(){
+        this.ConnectedTo= new HashMap<>();
+        this.ConnectedFrom= new HashMap<>();
     }
     public MyNode(NodeData node){
         this.node=node;
-        this.ConnectedTo= new HashMap<Integer,EdgeData>();
-        this.ConnectedFrom= new HashMap<Integer,Double>();
+        this.ConnectedTo= new HashMap<>();
+        this.ConnectedFrom= new HashMap<>();
     }
     public NodeData getNode(){
         return this.node;
