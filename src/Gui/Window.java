@@ -31,9 +31,9 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
     private JMenuBar menuBar;
     private JMenu main_menu;
     private JMenu Help_menu;
-    private JMenu editor;
+    private JMenuItem editor;
     private JMenu Algorithms;
-    private JMenuItem load, save , clear;
+    private JMenuItem load, save , clear ,Help_button;
     private JMenuItem AddNode;
     private JMenuItem RemoveNode;
     private JMenuItem Connect;
@@ -74,6 +74,9 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.menuBar.add(this.Help_menu);
         this.menuBar.add(this.clear);
         this.setJMenuBar(this.menuBar);
+        this.Help_button = new JMenuItem("Help_button");
+        this.Help_button.addActionListener(this);
+        this.Help_menu.add(this.Help_button);
         this.load = new JMenuItem("Load");
         this.load.setIcon(new ImageIcon(("src/Gui/load.png")));
         this.load.addActionListener(this);
@@ -258,6 +261,14 @@ public class Window extends JFrame implements ActionListener, MouseListener, Mou
         this.dist=Double.MAX_VALUE;
         this.nodeKey= Integer.MAX_VALUE;
         switch (e.getActionCommand()) {
+            case("Help_button"):
+                if(true) {
+                    JFrame f1 = new JFrame();
+                    JOptionPane.showMessageDialog(f1, "Please visit our repository for an enhanced manual at:\n https://github.com/ShauliTaragin/OOP_Ex2 ");
+                    this.setVisible(true);
+                    repaint();
+                }
+                break;
             case ("Load"):
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File("./data"));
