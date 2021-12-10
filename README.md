@@ -98,7 +98,7 @@ Pressing on each node will show each node's geolocation. To unshow the location 
 
 * Clear button clears the drawings on top of the loaded graph. i.e geolocation , shortestdist, center etc..
 
-![Screenshot](graph_draw.png)
+![Screenshot](graph_after_draw.png)
 | *Our gui representation of the shortest path and some geolocations * |
 ---------
 
