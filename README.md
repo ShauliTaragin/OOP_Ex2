@@ -22,7 +22,7 @@ Directed Weighted Graph Algorithm, designing a graph interface.
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-####Task 2 Object-Oriented Programming
+#### Task 2 Object-Oriented Programming
 
 ***Authors : Shauli Taragin & Ido Bar***  
 
@@ -157,7 +157,7 @@ As you can see our results after analyzing the code,our code is efficient. Besid
 ## UML
 
 ![Screenshot](OOP_Ex2_uml.png)
-| *Our gui representation of the shortest path and some geolocations* |
+| *Our Unified Modeling Language representation* |
 ---------
 
 
