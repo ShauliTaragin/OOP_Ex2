@@ -10,6 +10,7 @@ Directed Weighted Graph Algorithm, designing a graph interface.
     <li><a href="#Gui">GUI</a></li>
     <li><a href="#the-algorithm">The Algorithm</a></li>
     <li><a href="#results">Results</a></li>
+    <li><a href="#UML">Uml</a></li>
     <li><a href="#languages-and-tools">Languages and Tools</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -151,8 +152,12 @@ Our best Results:
 
 As you can see our results after analyzing the code,our code is efficient. Besides running in good times are tsp algorithm returns a very accurate result.
 
+---------
 
+## UML
 
+![Screenshot](OOP_Ex2_uml.png)
+| *Our gui representation of the shortest path and some geolocations* |
 ---------
 
 
