@@ -65,6 +65,8 @@ We would like to check the next methods:1. Creat graph by adding nodes and edges
 
 ![Screenshot](our_graph.png)
 
+|*Our gui representation of the graph* |
+
 ###### Note - The user must first load a graph from the menu in order to display it 
 * About our GUI :
 In our display of the graph the user must first load A graph from a json file of their choice which is located in the data package.
@@ -97,6 +99,7 @@ Pressing on each node will show each node's geolocation. To unshow the location 
 * Clear button clears the drawings on top of the loaded graph. i.e geolocation , shortestdist, center etc..
 
 ![Screenshot](graph_draw.png)
+| *Our gui representation of the shortest path and some geolocations * |
 ---------
 
 ## The Algorithm
@@ -146,7 +149,7 @@ Our best Results:
 
 
 
-As you can see our results after analyzing the code,our code is efficient. Besides running in good times are tsp algorithm returns a pretty close to the best result..
+As you can see our results after analyzing the code,our code is efficient. Besides running in good times are tsp algorithm returns a very accurate result.
 
 
 
