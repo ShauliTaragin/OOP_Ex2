@@ -67,7 +67,7 @@ We would like to check the next methods:1. Creat graph by adding nodes and edges
 
 |*Our gui representation of the graph* |
 
-###### Note - The user must first load a graph from the menu in order to display it 
+###### Note - The user must first load a graph from the menu or terminal in order to display it 
 * About our GUI :
 In our display of the graph the user must first load A graph from a json file of their choice which is located in the data package.
 
