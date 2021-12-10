@@ -13,7 +13,7 @@ class MyDWGAlgoTest {
     MyDWGAlgo best_algo_1 = new MyDWGAlgo("data/G1.json");
     MyDWGAlgo best_algo_2 = new MyDWGAlgo("data/G2.json");
     MyDWGAlgo best_algo_3 = new MyDWGAlgo("data/G3.json");
-    MyDWGAlgo best_algo_4 = new MyDWGAlgo("data/Not_connected_G.json");
+    MyDWGAlgo best_algo_4 = new MyDWGAlgo("data/graph.json");
     MyDWGAlgo best_algo_5 = new MyDWGAlgo("data/1000Nodes.json");
     MyDWGAlgo best_algo_6 = new MyDWGAlgo("data/10000Nodes.json");
 
